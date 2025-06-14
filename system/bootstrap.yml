@@ -1,0 +1,26 @@
+- name: Bootstrap
+  hosts: localhost
+  tasks:
+    - name: Create ArgoCD namespace
+      kubernetes.core.k8s:
+        api_version: v1
+        kind: Namespace
+        name: argocd
+        state: present
+
+    - name: Render ArgoCD manifests from Helm chart
+      kubernetes.core.helm_template:
+        chart_ref: ./argocd
+        include_crds: true
+        release_name: argocd
+        release_namespace: argocd
+        dependency_update: true
+      register: argocd_manifests
+
+    - name: Apply ArgoCD manifests
+      kubernetes.core.k8s:
+        resource_definition: "{{ argocd_manifests.stdout }}"
+        apply: true
+        server_side_apply:
+          # Act as if argocd was deployed by argocd itself, allowing argocd to update its own deployment without conflicts (?)
+          field_manager: argocd-controller

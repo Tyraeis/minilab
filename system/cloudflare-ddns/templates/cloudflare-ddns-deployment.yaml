@@ -11,7 +11,8 @@ metadata:
 spec:
   replicas: 1
   selector:
-    app.kubernetes.io/name: *name
+    matchLabels:
+      app.kubernetes.io/name: *name
   template:
     metadata:
       labels: *labels

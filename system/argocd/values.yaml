@@ -1,17 +1,32 @@
 argo-cd:
   global:
     domain: argocd.ncraig.dev
+
   configs:
     params:
       server.insecure: true
       controller.diff.server.side: true
+
   server:
     ingress:
       enabled: true
       ingressClassName: nginx
       annotations:
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
         cert-manager.io/cluster-issuer: letsencrypt-stg
-      tls: true
+      extraTls:
+        - hosts:
+            - argocd.ncraig.dev
+          secretName: argocd-cert
+
+    ingressGrpc:
+      enabled: true
+      ingressClassName: nginx
+      extraTls:
+        - hosts:
+            - grpc.argocd.ncraig.dev
+          secretName: grpc-argocd-cert
 
 argocd-apps:
   applicationsets:

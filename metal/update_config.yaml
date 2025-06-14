@@ -1,0 +1,25 @@
+- name: Update Talos Config
+  hosts: nodes
+  connection: local
+  vars:
+    apply: true
+  vars_files:
+    - vars.yaml
+    - secrets.yaml
+  tasks:
+    - name: Create Rendered Template Directory
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/rendered"
+        state: directory
+
+    - name: Template Talos Config File
+      ansible.builtin.template:
+        src: controlplane.yaml.j2
+        dest: "{{ playbook_dir }}/rendered/config_{{ hostname }}.yaml"
+
+    - name: Apply Talos Config File
+      ansible.builtin.command: "talosctl apply-config \
+        -n {{ inventory_hostname }} \
+        --file {{ playbook_dir }}/rendered/config_{{ hostname }}.yaml" \
+        --talosconfig {{ playbook_dir }}/talosconfig
+      when: apply | bool

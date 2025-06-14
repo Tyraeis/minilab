@@ -12,9 +12,12 @@ argo-cd:
 argocd-apps:
   applicationsets:
     root:
+      namespace: argocd
+      goTemplate: true
+      goTemplateOptions: ["missingkey=error"]
       generators:
         - git:
-            repoURL: &repoURL https://github.com/tyraies/minilab
+            repoURL: &repoURL https://github.com/Tyraeis/minilab
             revision: &revision main
             directories:
               - path: system/*
@@ -23,9 +26,10 @@ argocd-apps:
         metadata:
           name: "{{.path.basenameNormalized}}"
         spec:
+          project: default
           source:
             repoURL: *repoURL
-            revision: *revision
+            targetRevision: *revision
             path: "{{.path.path}}"
           destination:
             name: in-cluster

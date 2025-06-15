@@ -3,4 +3,7 @@ ingress-nginx:
     service:
       type: NodePort
     admissionWebhooks:
+      # https://github.com/kubernetes/ingress-nginx/issues/5968#issuecomment-2161363009
+      annotations:
+        argocd.argoproj.io/hook: PostSync
       timeoutSeconds: 30

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "whoami.fullname" . }}
+  labels:
+    {{- include "whoami.labels" . | nindent 4 }}
+  annotations:
+spec:
+  ingressClassName: "nginx"
+  tls:
+    - hosts:
+        - ncraig.dev
+      secretName: ncraig-dev-cert
+  rules:
+    - host: ncraig.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "whoami.fullname" $ }}
+                port:
+                  number: 80

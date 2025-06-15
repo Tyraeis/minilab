@@ -72,9 +72,9 @@ argocd-apps:
             retry:
               limit: 10
               backoff:
-                duration: 1m
+                duration: 5s
                 factor: 2
-                maxDuration: 16m
+                maxDuration: 10m
             syncOptions:
               - CreateNamespace=true
               - ApplyOutOfSyncOnly=true

@@ -23,6 +23,8 @@ spec:
           env:
           - name: DOMAINS
             value: "{{ .Values.domain }}"
+          - name: IPV6_PROVIDER
+            value: none
           - name: CLOUDFLARE_API_TOKEN
             valueFrom:
               secretKeyRef:

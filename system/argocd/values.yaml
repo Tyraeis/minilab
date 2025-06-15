@@ -74,7 +74,7 @@ argocd-apps:
               backoff:
                 duration: 5s
                 factor: 2
-                maxDuration: 10m
+                maxDuration: 3m
             syncOptions:
               - CreateNamespace=true
               - ApplyOutOfSyncOnly=true

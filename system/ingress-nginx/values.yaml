@@ -1,0 +1,6 @@
+ingress-nginx:
+  controller:
+    service:
+      type: NodePort
+    admissionWebhooks:
+      timeoutSeconds: 30

@@ -30,7 +30,7 @@ argo-cd:
       extraTls:
         - hosts:
             - argocd.ncraig.dev
-          secretName: argocd-cert
+          secretName: argocd-ncraig-dev-cert
 
     ingressGrpc:
       enabled: true

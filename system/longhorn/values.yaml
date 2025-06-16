@@ -13,5 +13,6 @@ longhorn:
     replicaAutoBalance: least-effort
 
   # https://github.com/longhorn/longhorn/issues/6415#issuecomment-1802349558
-  helmPreUpgradeCheckerJob:
-    enabled: false
+  # https://github.com/longhorn/longhorn/issues/6415#issuecomment-1936996757
+  preUpgradeChecker:
+    jobEnabled: false

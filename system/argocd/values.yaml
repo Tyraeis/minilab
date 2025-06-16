@@ -52,6 +52,7 @@ argocd-apps:
             revision: &revision main
             directories:
               - path: system/*
+              - path: platform/*
               - path: apps/*
       template:
         metadata:

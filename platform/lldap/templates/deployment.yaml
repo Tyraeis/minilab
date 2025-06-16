@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lldap.fullname" . }}
+  labels:
+    {{- include "lldap.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "lldap.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        {{- include "lldap.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "lldap/lldap:v0.6.1"
+
+          env:
+          - name: TZ
+            value: America/New_York
+
+          - name: LLDAP_LDAP_BASE_DN
+            value: dc=ncraig,dc=dev
+
+          - name: LLDAP_DATABASE_URL
+            value: sqlite:///data/users.db?mode=rwc
+
+          - name: LLDAP_JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: lldap-secrets
+                key: jwt-secret
+
+          - name: LLDAP_KEY_SEED
+            valueFrom:
+              secretKeyRef:
+                name: lldap-secrets
+                key: key-seed
+
+          - name: LLDAP_LDAP_USER_DN
+            valueFrom:
+              secretKeyRef:
+                name: lldap-secrets
+                key: admin-username
+
+          - name: LLDAP_LDAP_USER_PASS
+            valueFrom:
+              secretKeyRef:
+                name: lldap-secrets
+                key: admin-password
+
+          ports:
+            - name: ldap
+              containerPort: 3890
+            - name: ldaps
+              containerPort: 6360
+            - name: http
+              containerPort: 17170
+
+          volumeMounts:
+            - mountPath: /data
+              name: lldap-data
+
+      volumes:
+      - name: lldap-data
+        persistentVolumeClaim:
+          claimName: lldap-data

@@ -30,6 +30,12 @@ spec:
           - name: LLDAP_DATABASE_URL
             value: sqlite:///data/users.db?mode=rwc
 
+          - name: LLDAP_LDAP_PORT
+            value: "3890"
+
+          - name: LLDAP_HTTP_PORT
+            value: "17170"
+
           - name: LLDAP_JWT_SECRET
             valueFrom:
               secretKeyRef:

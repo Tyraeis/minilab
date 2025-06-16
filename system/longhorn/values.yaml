@@ -1,0 +1,13 @@
+longhorn:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    host: longhorn.ncraig.dev
+    tls: true
+    tlsSecret: longhorn-ncraig-dev-cert
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+
+  defaultSettings:
+    defaultDataLocality: best-effort
+    replicaAutoBalance: least-effort

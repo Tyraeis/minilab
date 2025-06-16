@@ -1,2 +1,3 @@
 virtual_ip: 192.168.5.15
 cluster_name: minilab
+talos_version: "1.10.4"

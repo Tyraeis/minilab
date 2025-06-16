@@ -1,25 +1,50 @@
 - name: Update Talos Config
   hosts: nodes
   connection: local
+  serial: 1
   vars:
     apply: true
+    upgrade: false
   vars_files:
     - vars.yaml
     - secrets.yaml
   tasks:
+    - name: Generate Installer Image ID
+      run_once: true
+      when: inventory_hostname == ansible_play_hosts_all[0] # run_once equivalent that works with serial:1
+      ansible.builtin.uri:
+        method: POST
+        url: https://factory.talos.dev/schematics
+        body: "{{ lookup('ansible.builtin.file', './image.yaml') }}"
+        body_format: "form-urlencoded"
+        status_code: [200, 201]
+      register: image_factory_response
+
     - name: Create Rendered Template Directory
       ansible.builtin.file:
-        path: "{{ playbook_dir }}/rendered"
+        path: "./rendered"
         state: directory
 
     - name: Template Talos Config File
       ansible.builtin.template:
         src: controlplane.yaml.j2
-        dest: "{{ playbook_dir }}/rendered/config_{{ hostname }}.yaml"
+        dest: "./rendered/config_{{ hostname }}.yaml"
 
     - name: Apply Talos Config File
-      ansible.builtin.command: "talosctl apply-config \
-        -n {{ inventory_hostname }} \
-        --file {{ playbook_dir }}/rendered/config_{{ hostname }}.yaml" \
-        --talosconfig {{ playbook_dir }}/talosconfig
+      ansible.builtin.command: >
+        talosctl apply-config
+        -n {{ inventory_hostname }}
+        --file ./rendered/config_{{ hostname }}.yaml
+        --talosconfig ./talosconfig
       when: apply | bool
+
+    - name: Upgrade Talos
+      ansible.builtin.command: >
+        talosctl upgrade
+        -n {{ inventory_hostname }}
+        --image factory.talos.dev/metal-installer/{{ image_factory_response.json.id }}:v{{ talos_version }}
+        --talosconfig ./talosconfig
+      when: upgrade | bool
+
+    - name: Check node is ready
+      ansible.builtin.pause:

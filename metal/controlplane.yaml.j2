@@ -17,6 +17,14 @@ machine:
     image: ghcr.io/siderolabs/kubelet:v1.33.1 # The `image` field is an optional reference to an alternative kubelet image.
     defaultRuntimeSeccompProfileEnabled: true # Enable container runtime default Seccomp profile.
     disableManifestsDirectory: true # The `disableManifestsDirectory` field configures the kubelet to get static pod manifests from the /etc/kubernetes/manifests directory.
+    extraMounts:
+      - destination: /var/lib/longhorn
+        type: bind
+        source: /var/lib/longhorn
+        options:
+          - bind
+          - rshared
+          - rw
 
   # Provides machine specific network configuration options.
   network:
@@ -30,13 +38,21 @@ machine:
 
   # Used to provide instructions for installations.
   install:
-    image: ghcr.io/siderolabs/installer:v1.10.3 # Allows for supplying the image used to perform the installation.
+    image: factory.talos.dev/metal-installer/{{ image_factory_response.json.id }}:v{{ talos_version }}
     diskSelector:
       type: nvme
     wipe: false # Indicates if the installation disk should be wiped at installation time.
 
   # Used to configure the machine's container image registry mirrors.
   registries: {}
+
+  sysctls:
+    vm.nr_hugepages: "1024"
+
+  kernel:
+    modules:
+      - name: nvme_tcp
+      - name: vfio_pci
 
   # Features describe individual Talos features that can be switched on or off.
   features:
@@ -107,6 +123,8 @@ cluster:
           exemptions:
             namespaces:
               - kube-system
+              - metallb
+              - longhorn
             runtimeClasses: []
             usernames: []
           kind: PodSecurityConfiguration

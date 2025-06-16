@@ -11,3 +11,7 @@ longhorn:
   defaultSettings:
     defaultDataLocality: best-effort
     replicaAutoBalance: least-effort
+
+  # https://github.com/longhorn/longhorn/issues/6415#issuecomment-1802349558
+  helmPreUpgradeCheckerJob:
+    enabled: false

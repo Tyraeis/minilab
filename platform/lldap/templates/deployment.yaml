@@ -33,25 +33,25 @@ spec:
           - name: LLDAP_JWT_SECRET
             valueFrom:
               secretKeyRef:
-                name: lldap-secrets
+                name: lldap-secret
                 key: jwt-secret
 
           - name: LLDAP_KEY_SEED
             valueFrom:
               secretKeyRef:
-                name: lldap-secrets
+                name: lldap-secret
                 key: key-seed
 
           - name: LLDAP_LDAP_USER_DN
             valueFrom:
               secretKeyRef:
-                name: lldap-secrets
+                name: lldap-secret
                 key: admin-username
 
           - name: LLDAP_LDAP_USER_PASS
             valueFrom:
               secretKeyRef:
-                name: lldap-secrets
+                name: lldap-secret
                 key: admin-password
 
           ports:

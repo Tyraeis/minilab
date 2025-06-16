@@ -11,16 +11,3 @@ spec:
   resources:
     requests:
       storage: 10Mi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: lldap-data-pv
-  labels:
-    {{- include "lldap.labels" . | nindent 4 }}
-spec:
-  storageClassName: longhorn
-  accessModes:
-  - ReadWriteOnce
-  capacity:
-    storage: 10Mi

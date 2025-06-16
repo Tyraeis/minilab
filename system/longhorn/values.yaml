@@ -1,6 +1,6 @@
 longhorn:
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: nginx
     host: longhorn.ncraig.dev
     tls: true

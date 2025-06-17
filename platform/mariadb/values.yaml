@@ -11,5 +11,3 @@ mariadb:
     persistence:
       storageClass: longhorn-strict-local
       size: 8Gi
-  passwordUpdateJob:
-    enabled: true

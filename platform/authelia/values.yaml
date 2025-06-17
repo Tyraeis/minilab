@@ -1,0 +1,67 @@
+authelia:
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      enabled: true
+      secret: auth-ncraig-dev-cert
+
+  configMap:
+    theme: darkv
+    default_2fa_method: totp
+    password_policy:
+      zxcvbn:
+        enabled: true
+
+    access_control:
+      rules:
+        - domain: whoami.ncraig.dev
+          policy: "one_factor"
+          subject: "group:whoami"
+
+    session:
+      cookies:
+        - domain: ncraig.dev
+          subdomain: auth
+    authentication_backend:
+      ldap:
+        enabled: true
+        implementation: lldap
+        address: "ldap://ldap.lldap.svc.cluster.local"
+        base_dn: "dc=ncraig,dc=dev"
+        user: "uid=authelia,ou=people,dc=ncraig,dc=dev"
+        password:
+          secret_name: authelia-secret
+          path: ldap-password
+    storage:
+      mysql:
+        enabled: true
+        deploy: true
+        address: "tcp://authelia-mariadb.svc.cluster.local:3306"
+        password:
+          secret_name: authelia-secret
+          path: mariadb-password
+    notifier:
+      smtp:
+        enabled: true
+        address: "submission://mail.smtp2go.com:2525"
+        username: "authelia.ncraig.dev"
+        password:
+          secret_name: authelia-secret
+          path: smtp-password
+
+  secret:
+    additionalSecrets:
+      authelia-secret: {}
+
+  mariadb:
+    fullnameOverride: authelia-mariadb
+    auth:
+      existingSecret: authelia-mariadb-secret
+    primary:
+      persistence:
+        enabled: true
+        storageClass: longhorn
+        size: 1Gi

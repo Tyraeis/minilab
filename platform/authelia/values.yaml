@@ -36,6 +36,9 @@ authelia:
           secret_name: authelia-secret
           path: ldap-password
     storage:
+      encryption_key:
+        secret_name: authelia-secret
+        path: storage-encryption-key
       mysql:
         enabled: true
         deploy: true

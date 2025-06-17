@@ -29,7 +29,7 @@ authelia:
       ldap:
         enabled: true
         implementation: lldap
-        address: "ldap://ldap.lldap.svc.cluster.local"
+        address: "ldap://lldap.lldap.svc.cluster.local"
         base_dn: "dc=ncraig,dc=dev"
         user: "uid=authelia,ou=people,dc=ncraig,dc=dev"
         password:
@@ -39,7 +39,7 @@ authelia:
       mysql:
         enabled: true
         deploy: true
-        address: "tcp://authelia-mariadb.svc.cluster.local:3306"
+        address: "tcp://authelia-mariadb.authelia.svc.cluster.local:3306"
         password:
           secret_name: authelia-secret
           path: mariadb-password

@@ -11,7 +11,7 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
-    - port: 3890
+    - port: 389
       targetPort: ldap
       protocol: TCP
       name: ldap

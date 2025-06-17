@@ -1,2 +1,8 @@
 /.vscode
+
+# Helm dependencies
 /*/*/charts
+# Unsealed secrets
+**/*-secret.yaml
+# Kubeseal temporary files
+.*.yaml*

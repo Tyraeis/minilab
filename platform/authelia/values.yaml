@@ -9,7 +9,7 @@ authelia:
       secret: auth-ncraig-dev-cert
 
   configMap:
-    theme: darkv
+    theme: dark
     default_2fa_method: totp
     password_policy:
       zxcvbn:

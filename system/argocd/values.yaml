@@ -10,7 +10,7 @@ argo-cd:
       oidc.config: |
         name: "Authelia"
         issuer: "https://auth.ncraig.dev"
-        clientID: $argocd-oidc-secret:clientID
+        clientID: hBv00QyLxfNEyJzRNcWEo0~SqdSCpyFRqhsuxw3HiYYTR2nhcD0diqQwI0U-ZbAI4fwMo3sG
         clientSecret: $argocd-oidc-secret:clientSecret
         requestedScopes:
           - "openid"

@@ -37,7 +37,7 @@ authelia:
               path: /secrets/authelia-secret/jwks-key.pem
         clients:
           - client_name: "ArgoCD"
-            client_id: '{{ secret "/secrets/authelia-oidc-clients/argocd.clientid" }}'
+            client_id: hBv00QyLxfNEyJzRNcWEo0~SqdSCpyFRqhsuxw3HiYYTR2nhcD0diqQwI0U-ZbAI4fwMo3sG
             client_secret:
               path: /secrets/authelia-oidc-clients/argocd.clientsecret
             authorization_policy: two_factor

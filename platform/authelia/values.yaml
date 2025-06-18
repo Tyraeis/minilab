@@ -28,7 +28,7 @@ authelia:
       redis:
         enabled: true
         deploy: true
-        host: "authelia-redis.authelia.svc.cluster.local"
+        host: "authelia-redis-master.authelia.svc.cluster.local"
         password:
           secret_name: authelia-redis-secret
           path: redis-password

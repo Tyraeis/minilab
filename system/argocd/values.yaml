@@ -6,18 +6,17 @@ argo-cd:
     params:
       server.insecure: true
       controller.diff.server.side: true
-      resource.customizations.health.service: |
-        hs = {}
-        if obj.status ~= nil then
-          hs.status = "Healthy"
-        end
-        return hs
-      resource.customizations.health.networking.k8s.io_Ingress: |
-        hs = {}
-        if obj.status ~= nil then
-          hs.status = "Healthy"
-        end
-        return hs
+    cm:
+      oidc.config: |
+        name: "Authelia"
+        issuer: "https://auth.ncraig.dev"
+        clientID: $argocd-oidc-secret:clientID
+        clientSecret: $argocd-oidc-secret:clientSecret
+        requestedScopes:
+          - "openid"
+          - "profile"
+          - "email"
+          - "groups"
 
   server:
     ingress:

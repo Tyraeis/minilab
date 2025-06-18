@@ -24,6 +24,39 @@ authelia:
           policy: "one_factor"
           subject: "group:whoami"
 
+    identity_providers:
+      oidc:
+        enabled: true
+        hmac_secret:
+          secret_name: authelia-secret
+          path: hmac-secret
+        jwks:
+          - key_id: ""
+            algorithm: "RS256"
+            use: "sig"
+            key:
+              secret_name: authelia-secret
+              path: jwks-key.pem
+        clients:
+          - client_name: "ArgoCD"
+            client_id:
+              secret_name: authelia-oidc-clients
+              path: argocd.clientid
+            client_secret:
+              secret_name: authelia-oidc-clients
+              path: argocd.clientsecret
+            authorization_policy: two_factor
+            require_pkce: true
+            pkce_challenge_method: S256
+            redirect_uris:
+              - "https://argocd.ncraig.dev/auth/callback"
+              - "https://argocd.ncraig.dev/pkce/verify"
+            scopes:
+              - openid
+              - groups
+              - email
+              - profile
+            token_endpoint_auth_method: client_secret_basic
     session:
       cookies:
         - domain: ncraig.dev

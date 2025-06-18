@@ -25,6 +25,13 @@ authelia:
       cookies:
         - domain: ncraig.dev
           subdomain: auth
+      redis:
+        enabled: true
+        deploy: true
+        host: "authelia-redis.authelia.svc.cluster.local"
+        password:
+          secret_name: authelia-redis-secret
+          path: redis-password
     authentication_backend:
       ldap:
         enabled: true
@@ -62,6 +69,7 @@ authelia:
   secret:
     additionalSecrets:
       authelia-secret: {}
+      authelia-redis-secret: {}
 
   mariadb:
     fullnameOverride: authelia-mariadb
@@ -72,3 +80,9 @@ authelia:
         enabled: true
         storageClass: longhorn
         size: 1Gi
+
+  redis:
+    fullnameOverride: authelia-redis
+    auth:
+      existingSecret: "authelia-redis-secret"
+      existingSecretPasswordKey: "redis-password"

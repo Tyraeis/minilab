@@ -6,6 +6,9 @@ argo-cd:
     params:
       server.insecure: true
       controller.diff.server.side: true
+    rbac:
+      policy.csv: |
+        g, cluster_admin, role:admin
     cm:
       oidc.config: |
         name: "Authelia"

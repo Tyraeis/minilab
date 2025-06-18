@@ -11,12 +11,15 @@ argo-cd:
         name: "Authelia"
         issuer: "https://auth.ncraig.dev"
         clientID: hBv00QyLxfNEyJzRNcWEo0~SqdSCpyFRqhsuxw3HiYYTR2nhcD0diqQwI0U-ZbAI4fwMo3sG
-        clientSecret: $argocd-oidc-secret:clientSecret
+        clientSecret: $oidc.client.secret
         requestedScopes:
           - "openid"
           - "profile"
           - "email"
           - "groups"
+
+  secret:
+    createSecret: false
 
   server:
     replicas: 2

@@ -51,7 +51,6 @@ authelia:
               - groups
               - email
               - profile
-            token_endpoint_auth_method: client_secret_basic
     session:
       cookies:
         - domain: ncraig.dev

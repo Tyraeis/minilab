@@ -31,20 +31,15 @@ authelia:
           secret_name: authelia-secret
           path: hmac-secret
         jwks:
-          - key_id: ""
-            algorithm: "RS256"
+          - algorithm: "RS256"
             use: "sig"
             key:
               secret_name: authelia-secret
               path: jwks-key.pem
         clients:
           - client_name: "ArgoCD"
-            client_id:
-              secret_name: authelia-oidc-clients
-              path: argocd.clientid
-            client_secret:
-              secret_name: authelia-oidc-clients
-              path: argocd.clientsecret
+            client_id: "{{ secret "/secrets/authelia-oidc-clients/argocd.clientid" }}"
+            client_secret: "{{ secret "/secrets/authelia-oidc-clients/argocd.clientsecret" }}"
             authorization_policy: two_factor
             require_pkce: true
             pkce_challenge_method: S256
@@ -106,6 +101,7 @@ authelia:
   secret:
     additionalSecrets:
       authelia-secret: {}
+      authelia-oidc-clients: {}
       authelia-redis-secret: {}
 
   mariadb:

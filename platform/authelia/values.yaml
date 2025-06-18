@@ -63,6 +63,7 @@ authelia:
     notifier:
       smtp:
         enabled: true
+        sender: "Authelia <no-reply@ncraig.dev>"
         address: "submission://mail.smtp2go.com:2525"
         username: "authelia.ncraig.dev"
         password:

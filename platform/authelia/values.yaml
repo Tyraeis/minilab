@@ -35,6 +35,14 @@ authelia:
             use: "sig"
             key:
               path: /secrets/authelia-secret/jwks-key.pem
+        cors:
+          endpoints:
+            - authorization
+            - token
+            - revocation
+            - introspection
+            - userinfo
+          allowed_origins_from_client_redirect_uris: true
         clients:
           - client_name: "ArgoCD"
             client_id: hBv00QyLxfNEyJzRNcWEo0~SqdSCpyFRqhsuxw3HiYYTR2nhcD0diqQwI0U-ZbAI4fwMo3sG

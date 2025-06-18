@@ -48,8 +48,9 @@ authelia:
             client_id: hBv00QyLxfNEyJzRNcWEo0~SqdSCpyFRqhsuxw3HiYYTR2nhcD0diqQwI0U-ZbAI4fwMo3sG
             client_secret:
               path: /secrets/authelia-oidc-clients/argocd.clientsecret
+            public: false
             authorization_policy: two_factor
-            require_pkce: false
+            require_pkce: true
             pkce_challenge_method: S256
             redirect_uris:
               - "https://argocd.ncraig.dev/auth/callback"
@@ -59,6 +60,13 @@ authelia:
               - groups
               - email
               - profile
+            response_types:
+              - code
+            grant_types:
+              - authorization_code
+            access_token_signed_response_alg: none
+            userinfo_signed_response_alg: none
+            token_endpoint_auth_method: client_secret_basic
     session:
       cookies:
         - domain: ncraig.dev

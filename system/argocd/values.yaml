@@ -20,6 +20,8 @@ argo-cd:
           - "groups"
 
   server:
+    replicas: 2
+
     ingress:
       enabled: true
       ingressClassName: nginx

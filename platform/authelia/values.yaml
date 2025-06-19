@@ -21,7 +21,9 @@ authelia:
 
     access_control:
       rules:
-        - domain: longhorn.ncraig.dev
+        - domain:
+            - longhorn.ncraig.dev
+            - argocd.ncraig.dev
           policy: "two_factor"
           subject: "group:cluster_admin"
         - domain: whoami.ncraig.dev

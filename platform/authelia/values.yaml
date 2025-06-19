@@ -17,6 +17,9 @@ authelia:
 
     access_control:
       rules:
+        - domain: argocd.ncraig.dev
+          resources: /api/webhook
+          policy: "bypass"
         - domain:
             - longhorn.ncraig.dev
             - argocd.ncraig.dev

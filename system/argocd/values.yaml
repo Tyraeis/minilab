@@ -28,7 +28,7 @@ argo-cd:
     createSecret: false
 
   server:
-    replicas: 2
+    replicas: 1
 
     ingress:
       enabled: true

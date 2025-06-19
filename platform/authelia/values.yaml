@@ -1,4 +1,8 @@
 authelia:
+  pod:
+    kind: Deployment
+    replicas: 1
+
   ingress:
     enabled: true
     className: nginx

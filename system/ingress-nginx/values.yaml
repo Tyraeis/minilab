@@ -5,3 +5,5 @@ ingress-nginx:
       annotations:
         argocd.argoproj.io/hook: PostSync
       timeoutSeconds: 30
+    service:
+      externalTrafficPolicy: Local

@@ -15,6 +15,7 @@ argo-cd:
         issuer: "https://auth.ncraig.dev"
         clientID: hBv00QyLxfNEyJzRNcWEo0~SqdSCpyFRqhsuxw3HiYYTR2nhcD0diqQwI0U-ZbAI4fwMo3sG
         clientSecret: $oidc.client.secret
+        cliClientId: f-O-AYy70~DoQkT0efZoQKvEBtGZpnXhpORu0hIhDfpJHDRgbwlCyR5kX3o3TKalBw4rbJ3R
         requestedScopes:
           - "openid"
           - "profile"

@@ -21,6 +21,8 @@ argo-cd:
           - "profile"
           - "email"
           - "groups"
+        enableUserInfoGroups: true
+        userInfoCacheExpiration: 5m
 
   secret:
     createSecret: false

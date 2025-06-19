@@ -10,6 +10,7 @@ argo-cd:
       policy.csv: |
         g, cluster_admin, role:admin
     cm:
+      admin.enabled: false
       oidc.config: |
         name: "Authelia"
         issuer: "https://auth.ncraig.dev"
@@ -53,6 +54,9 @@ argo-cd:
         - hosts:
             - grpc.argocd.ncraig.dev
           secretName: grpc-argocd-ncraig-dev-cert
+
+  dex:
+    enabled: false
 
 argocd-apps:
   applicationsets:

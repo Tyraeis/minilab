@@ -26,6 +26,7 @@ authelia:
 
     identity_providers:
       oidc:
+        enable_client_debug_messages: true
         enabled: true
         hmac_secret:
           secret_name: authelia-secret

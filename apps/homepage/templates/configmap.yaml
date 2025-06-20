@@ -38,17 +38,7 @@ data:
 
     - greeting:
         text_size: 2xl
-        text: "–"
-
-    - longhorn:
-        expanded: true
-        total: true
-        nodes: false
-        labels: true
-
-    - greeting:
-        text_size: 2xl
-        text: "–"
+        text: "│"
 
     - kubernetes:
         nodes:
@@ -61,7 +51,17 @@ data:
 
     - greeting:
         text_size: 2xl
-        text: "–"
+        text: "│"
+
+    - longhorn:
+        expanded: true
+        total: true
+        nodes: false
+        labels: true
+
+    - greeting:
+        text_size: 2xl
+        text: "│"
 
     - longhorn:
         expanded: true

@@ -9,7 +9,7 @@ data:
     mode: cluster
   settings.yaml: |
     theme: dark
-    headerStyle: boxedWidgets
+    headerStyle: underlined
     statusStyle: dot
     layout:
       - Services:
@@ -24,25 +24,38 @@ data:
   services.yaml: ""
   widgets.yaml: |
     - kubernetes:
+        nodes:
+          show: false
         cluster:
           show: true
           cpu: true
           memory: true
           showLabel: true
           label: "cluster"
+
+    - kubernetes:
         nodes:
           show: true
           cpu: true
           memory: true
           showLabel: true
+        cluster:
+          show: false
+
     - longhorn:
         expanded: true
         total: true
+        nodes: false
         labels: true
+
+    - longhorn:
+        expanded: true
+        total: false
         nodes: true
+        labels: true
+
     - datetime:
-        text_size: x1
+        text_size: 4xl
         format:
-          dateStyle: short
           timeStyle: short
   docker.yaml: ""

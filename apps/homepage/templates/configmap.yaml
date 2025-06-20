@@ -40,4 +40,9 @@ data:
         total: true
         labels: true
         nodes: true
+    - datetime:
+        text_size: x1
+        format:
+          dateStyle: short
+          timeStyle: short
   docker.yaml: ""

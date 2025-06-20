@@ -40,6 +40,16 @@ data:
         text_size: 2xl
         text: "–"
 
+    - longhorn:
+        expanded: true
+        total: true
+        nodes: false
+        labels: true
+
+    - greeting:
+        text_size: 2xl
+        text: "–"
+
     - kubernetes:
         nodes:
           show: true
@@ -48,16 +58,6 @@ data:
           showLabel: true
         cluster:
           show: false
-
-    - greeting:
-        text_size: 2xl
-        text: "–"
-
-    - longhorn:
-        expanded: true
-        total: true
-        nodes: false
-        labels: true
 
     - greeting:
         text_size: 2xl

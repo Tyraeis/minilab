@@ -4,6 +4,7 @@
 /*/*/charts
 # Unsealed secrets
 **/*-secret.yaml
+**/secret.yaml
 # Kubeseal temporary files
 .*.yaml*
 # Certificates

@@ -4,6 +4,12 @@ authelia:
     className: nginx
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
+      gethomepage.dev/enabled: "true"
+      gethomepage.dev/group: User Management
+      gethomepage.dev/name: Authelia
+      gethomepage.dev/description: Password Management + 2FA
+      gethomepage.dev/href: https://auth.ncraig.dev/settings/
+      gethomepage.dev/icon: sh-authelia.svg
     tls:
       enabled: true
       secret: auth-ncraig-dev-cert
@@ -20,11 +26,17 @@ authelia:
         - domain: argocd.ncraig.dev
           resources: /api/webhook
           policy: "bypass"
+
         - domain:
             - longhorn.ncraig.dev
             - argocd.ncraig.dev
           policy: "two_factor"
           subject: "group:cluster_admin"
+
+        - domain: home.ncraig.dev
+          policy: "one_factor"
+          subject: "group:user"
+
         - domain: whoami.ncraig.dev
           policy: "one_factor"
           subject: "group:whoami"

@@ -11,14 +11,14 @@ data:
     theme: dark
     providers:
       longhorn:
-        url: https://longhorn-frontend.longhorn.svc.cluster.local/
+        url: https://longhorn-frontend.longhorn.svc.cluster.local
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: ""
   services.yaml: |
-    - Services:
-    - User Management:
-    - Cluster Management:
+    - Services: []
+    - User Management: []
+    - Cluster Management: []
   widgets.yaml: |
     - kubernetes:
         cluster:

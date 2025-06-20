@@ -17,6 +17,8 @@ machine:
     image: ghcr.io/siderolabs/kubelet:v1.33.1 # The `image` field is an optional reference to an alternative kubelet image.
     defaultRuntimeSeccompProfileEnabled: true # Enable container runtime default Seccomp profile.
     disableManifestsDirectory: true # The `disableManifestsDirectory` field configures the kubelet to get static pod manifests from the /etc/kubernetes/manifests directory.
+    extraArgs:
+      rotate-server-certificates: true # enable certificate rotation (for Metrics Server)
     extraMounts:
       - destination: /var/lib/longhorn
         type: bind

@@ -30,6 +30,10 @@
         src: controlplane.yaml.j2
         dest: "./rendered/config_{{ hostname }}.yaml"
 
+    - name: Check node is ready
+      ansible.builtin.pause:
+        prompt: "About to update {{ hostname }} ({{ inventory_hostname }})"
+
     - name: Apply Talos Config File
       ansible.builtin.command: >
         talosctl apply-config
@@ -45,6 +49,3 @@
         --image factory.talos.dev/metal-installer/{{ image_factory_response.json.id }}:v{{ talos_version }}
         --talosconfig ./talosconfig
       when: upgrade | bool
-
-    - name: Check node is ready
-      ansible.builtin.pause:

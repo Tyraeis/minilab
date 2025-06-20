@@ -11,7 +11,6 @@
   tasks:
     - name: Generate Installer Image ID
       run_once: true
-      when: inventory_hostname == ansible_play_hosts_all[0] # run_once equivalent that works with serial:1
       ansible.builtin.uri:
         method: POST
         url: https://factory.talos.dev/schematics

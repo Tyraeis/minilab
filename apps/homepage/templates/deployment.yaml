@@ -27,7 +27,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
-              value: ncraig.dev
+              value: home.ncraig.dev
           ports:
             - name: http
               containerPort: 3000

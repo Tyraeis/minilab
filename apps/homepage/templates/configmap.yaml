@@ -33,6 +33,10 @@ data:
           showLabel: true
           label: "cluster"
 
+    - greeting:
+        text_size: xl
+        text: "◦"
+
     - kubernetes:
         nodes:
           show: true
@@ -42,11 +46,19 @@ data:
         cluster:
           show: false
 
+    - greeting:
+        text_size: xl
+        text: "◦"
+
     - longhorn:
         expanded: true
         total: true
         nodes: false
         labels: true
+
+    - greeting:
+        text_size: xl
+        text: "◦"
 
     - longhorn:
         expanded: true

@@ -18,7 +18,10 @@ data:
     providers:
       longhorn:
         url: http://longhorn-frontend.longhorn.svc.cluster.local
-  custom.css: ""
+  custom.css: |
+    .information-widget-kubernetes div :first-child {
+      margin-left: 0px;
+    }
   custom.js: ""
   bookmarks.yaml: ""
   services.yaml: ""
@@ -34,7 +37,7 @@ data:
           label: "cluster"
 
     - greeting:
-        text_size: xl
+        text_size: 2xl
         text: "◦"
 
     - kubernetes:
@@ -47,7 +50,7 @@ data:
           show: false
 
     - greeting:
-        text_size: xl
+        text_size: 2xl
         text: "◦"
 
     - longhorn:
@@ -57,7 +60,7 @@ data:
         labels: true
 
     - greeting:
-        text_size: xl
+        text_size: 2xl
         text: "◦"
 
     - longhorn:

@@ -38,7 +38,7 @@ data:
 
     - greeting:
         text_size: 2xl
-        text: "◦"
+        text: "–"
 
     - kubernetes:
         nodes:
@@ -51,7 +51,7 @@ data:
 
     - greeting:
         text_size: 2xl
-        text: "◦"
+        text: "–"
 
     - longhorn:
         expanded: true
@@ -61,7 +61,7 @@ data:
 
     - greeting:
         text_size: 2xl
-        text: "◦"
+        text: "–"
 
     - longhorn:
         expanded: true

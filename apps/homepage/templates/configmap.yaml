@@ -9,16 +9,19 @@ data:
     mode: cluster
   settings.yaml: |
     theme: dark
+    headerStyle: boxedWidgets
+    statusStyle: dot
+    layout:
+      - Services:
+      - User Management:
+      - Cluster Management:
     providers:
       longhorn:
         url: http://longhorn-frontend.longhorn.svc.cluster.local
   custom.css: ""
   custom.js: ""
   bookmarks.yaml: ""
-  services.yaml: |
-    - Services: []
-    - User Management: []
-    - Cluster Management: []
+  services.yaml: ""
   widgets.yaml: |
     - kubernetes:
         cluster:

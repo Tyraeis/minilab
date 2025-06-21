@@ -12,6 +12,7 @@ argo-cd:
         g, homepage, role:readonly
     cm:
       admin.enabled: false
+      accounts.homepage: apiKey
       oidc.config: |
         name: "Authelia"
         issuer: "https://auth.ncraig.dev"

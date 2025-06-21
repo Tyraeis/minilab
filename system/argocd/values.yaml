@@ -9,6 +9,7 @@ argo-cd:
     rbac:
       policy.csv: |
         g, cluster_admin, role:admin
+        g, homepage, role:readonly
     cm:
       admin.enabled: false
       oidc.config: |

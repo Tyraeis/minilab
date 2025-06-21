@@ -48,6 +48,9 @@ argo-cd:
         gethomepage.dev/name: Argo CD
         gethomepage.dev/description: Continuous Deployment
         gethomepage.dev/icon: sh-argo-cd.svg
+        gethomepage.dev/widget.type: argocd
+        gethomepage.dev/widget.url: http://argocd-server.argocd.svc.cluster.local
+        gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_ARGOCD_TOKEN}}"
       extraTls:
         - hosts:
             - argocd.ncraig.dev

@@ -16,7 +16,7 @@ longhorn:
       gethomepage.dev/name: Longhorn
       gethomepage.dev/description: Storage
       gethomepage.dev/icon: sh-rancher-longhorn.svg
-      gethomepage.dev/siteMonitor: http://longhorn-frontend.longhorn.svc.cluster.local
+      gethomepage.dev/pod-selector: app=longhorn-ui
 
   defaultSettings:
     defaultDataLocality: best-effort

@@ -14,6 +14,9 @@ spec:
       labels:
         {{- include "syncthing.labels" . | nindent 8 }}
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
       containers:
         - name: syncthing
           image: "syncthing/syncthing:1.29"
@@ -30,6 +33,12 @@ spec:
           volumeMounts:
             - mountPath: /var/syncthing
               name: syncthing-data
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
       - name: syncthing-data
         persistentVolumeClaim:

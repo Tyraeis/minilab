@@ -16,6 +16,9 @@ spec:
       labels:
         {{- include "lldap.labels" . | nindent 8 }}
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
       containers:
         - name: {{ .Chart.Name }}
           image: "lldap/lldap:v0.6.1"
@@ -71,6 +74,13 @@ spec:
           volumeMounts:
             - mountPath: /data
               name: lldap-data
+
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
 
       volumes:
       - name: lldap-data

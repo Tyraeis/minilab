@@ -9,6 +9,8 @@ spec:
   selector:
     matchLabels:
       {{- include "syncthing.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:

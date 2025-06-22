@@ -24,27 +24,10 @@ spec:
       automountServiceAccountToken: true
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
-      initContainers:
-        - name: homepage-init
-          image: "ghcr.io/gethomepage/homepage:v1.3.2"
-          command:
-          - cp
-          args:
-          - -r
-          - /app/.next/*
-          - /dotnext/
-          volumeMounts:
-            - name: dotnext
-              mountPath: /dotnext/
-          securityContext:
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
-            seccompProfile:
-              type: RuntimeDefault
       containers:
         - name: homepage
           image: "ghcr.io/gethomepage/homepage:v1.3.2"
+          imagePullPolicy: Always
           env:
             - name: PUID
               value: "1000"
@@ -88,8 +71,6 @@ spec:
               subPath: widgets.yaml
             - mountPath: /app/config/logs
               name: logs
-            - mountPath: /app/.next
-              name: dotnext
           securityContext:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
@@ -101,6 +82,4 @@ spec:
           configMap:
             name: homepage
         - name: logs
-          emptyDir: {}
-        - name: dotnext
           emptyDir: {}

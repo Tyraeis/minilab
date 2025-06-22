@@ -10,7 +10,7 @@ metadata:
     gethomepage.dev/group: User Management
     gethomepage.dev/name: LLDAP
     gethomepage.dev/description: User Profiles
-    gethomepage.dev/icon: sh-lldap.svg
+    gethomepage.dev/icon: sh-lldap-light.svg
 spec:
   ingressClassName: "nginx"
   tls:

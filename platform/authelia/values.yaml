@@ -9,7 +9,7 @@ authelia:
       gethomepage.dev/name: Authelia
       gethomepage.dev/description: Password Management + 2FA
       gethomepage.dev/href: https://auth.ncraig.dev/settings/
-      gethomepage.dev/icon: sh-authelia.svg
+      gethomepage.dev/icon: sh-authelia-light.svg
     tls:
       enabled: true
       secret: auth-ncraig-dev-cert

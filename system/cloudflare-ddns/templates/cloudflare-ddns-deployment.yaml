@@ -17,6 +17,9 @@ spec:
     metadata:
       labels: *labels
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
       containers:
         - name: *name
           image: favonia/cloudflare-ddns:1.15.1
@@ -30,3 +33,11 @@ spec:
               secretKeyRef:
                 name: cloudflare-api-token
                 key: cloudflare-api-token
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: [ALL]

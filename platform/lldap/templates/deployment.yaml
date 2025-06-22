@@ -79,6 +79,8 @@ spec:
             allowPrivilegeEscalation: false
             seccompProfile:
               type: RuntimeDefault
+            capabilities:
+              drop: [ALL]
 
       volumes:
       - name: lldap-data

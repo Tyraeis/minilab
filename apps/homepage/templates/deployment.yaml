@@ -17,6 +17,9 @@ spec:
       labels:
         app.kubernetes.io/name: homepage
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
       serviceAccountName: homepage
       automountServiceAccountToken: true
       dnsPolicy: ClusterFirst
@@ -64,6 +67,12 @@ spec:
               subPath: widgets.yaml
             - mountPath: /app/config/logs
               name: logs
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
       volumes:
         - name: homepage-config
           configMap:

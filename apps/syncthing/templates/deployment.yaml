@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syncthing
+  labels:
+    {{- include "syncthing.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "syncthing.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "syncthing.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: syncthing
+          image: "syncthing/syncthing:1.29"
+          ports:
+            - name: http
+              containerPort: 8384
+              protocol: TCP
+            - containerPort: 22000
+              protocol: TCP
+            - containerPort: 22000
+              protocol: UDP
+            - containerPort: 21027
+              protocol: UDP
+          volumeMounts:
+            - mountPath: /var/syncthing
+              name: syncthing-data
+      volumes:
+      - name: syncthing-data
+        persistentVolumeClaim:
+          claimName: syncthing-data

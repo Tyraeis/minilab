@@ -37,6 +37,10 @@ authelia:
           policy: "one_factor"
           subject: "group:user"
 
+        - domain: syncthing.ncraig.dev
+          policy: "one_factor"
+          subject: "group:syncthing"
+
         - domain: whoami.ncraig.dev
           policy: "one_factor"
           subject: "group:whoami"

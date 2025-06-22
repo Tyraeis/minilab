@@ -10,7 +10,6 @@ data:
   settings.yaml: |
     theme: dark
     headerStyle: underlined
-    statusStyle: dot
     layout:
       - Services:
       - User Management:

@@ -6,6 +6,6 @@
 **/*-secret.yaml
 **/secret.yaml
 # Kubeseal temporary files
-.*.yaml*
+*/**/.*.yaml*
 # Certificates
 *.pem

@@ -9,7 +9,7 @@ data:
     version = "2"
     bindaddress = "0.0.0.0:8443"
     ldapbindaddress = "0.0.0.0:3636"
-    db_path = "/db/kanidm.db"
+    db_path = "/data/kanidm.db"
 
     tls_chain = "/cert/tls.crt"
     tls_key = "/cert/tls.key"

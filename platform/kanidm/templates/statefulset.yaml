@@ -21,19 +21,17 @@ spec:
       containers:
         - name: kanidm
           image: "kanidm/server:1.6.4"
-          env:
-            - name: KANIDM_SERVER_CONFIG_PATH
-              value: /config/server.toml
           ports:
             - name: https
               containerPort: 8443
             - name: ldap
               containerPort: 3636
           volumeMounts:
-            - name: db
-              mountPath: /db
-            - name: config
+            - name: data
               mountPath: /data
+            - name: config
+              mountPath: /data/server.toml
+              subPath: server.toml
               readOnly: true
             - name: cert
               mountPath: /cert
@@ -55,7 +53,7 @@ spec:
             secretName: {{ .Values.tls_secret }}
   volumeClaimTemplates:
     - metadata:
-        name: db
+        name: data
         labels:
           {{- include "kanidm.labels" . | nindent 10 }}
       spec:

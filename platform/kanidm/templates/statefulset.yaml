@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kanidm
+  labels:
+    {{- include "kanidm.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "kanidm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "kanidm.labels" . | nindent 8 }}
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: kanidm
+          image: "kanidm/server:1.6.4"
+          env:
+            - name: KANIDM_SERVER_CONFIG_PATH
+              value: /config/server.toml
+          ports:
+            - name: https
+              containerPort: 8443
+            - name: ldap
+              containerPort: 3636
+          volumeMounts:
+            - name: db
+              mountPath: /db
+            - name: config
+              mountPath: /data
+              readOnly: true
+            - name: cert
+              mountPath: /cert
+              readOnly: true
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: [ALL]
+      volumes:
+        - name: config
+          configMap:
+            name: kanidm
+        - name: cert
+          secret:
+            secretName: {{ .Values.tls_secret }}
+  volumeClaimTemplates:
+    - metadata:
+        name: db
+        labels:
+          {{- include "kanidm.labels" . | nindent 10 }}
+      spec:
+        accessModes: [ ReadWriteOnce ]
+        storageClassName: longhorn
+        resources:
+          requests:
+            storage: 100Mi

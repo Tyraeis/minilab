@@ -1,0 +1,2 @@
+domain: sso.ncraig.dev
+tls_secret: sso-ncraig-dev-cert

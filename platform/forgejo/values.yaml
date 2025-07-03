@@ -5,6 +5,26 @@ forgejo:
   strategy:
     type: Recreate
 
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      gethomepage.dev/enabled: "true"
+      gethomepage.dev/group: Services
+      gethomepage.dev/name: Forgejo
+      gethomepage.dev/description: Git Server
+      gethomepage.dev/icon: sh-forgejo.svg
+    hosts:
+      - host: &host git.ncraig.dev
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: git-ncraig-dev-cert
+        hosts:
+          - *host
+
   gitea:
     admin:
       existingSecret: forgejo-admin-secret
@@ -48,6 +68,8 @@ forgejo:
         provider: openidConnect
         autoDiscoverUrl: https://sso.ncraig.dev/oauth2/openid/forgejo/.well-known/openid-configuration
         existingSecret: forgejo-oauth-secret
+        groupClaimName: groups
+        adminGroup: forgejo_admins
 
   redis-cluster:
     enabled: false

@@ -12,6 +12,8 @@ forgejo:
         DOMAIN: git.ncraig.dev
         ROOT_URL: https://git.ncraig.dev
         OFFLINE_MODE: true
+      service:
+        ALLOW_ONLY_EXTERNAL_REGISTRATION: true
       repository:
         DISABLED_REPO_UNITS: repo.wiki,repo.projects
         DISABLE_STARS: true
@@ -38,6 +40,12 @@ forgejo:
         valueFrom: *valkey_conn_str
       - name: FORGEJO__CACHE__HOST
         valueFrom: *valkey_conn_str
+
+    oauth:
+      - name: kanidm
+        provider: openidConnect
+        autoDiscoverUrl: https://sso.ncraig.dev/oauth2/openid/forgejo/.well-known/openid-configuration
+        existingSecret: forgejo-oauth-secret
 
   redis-cluster:
     enabled: false

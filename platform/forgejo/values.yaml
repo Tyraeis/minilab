@@ -35,6 +35,8 @@ forgejo:
         ROOT_URL: https://git.ncraig.dev
         OFFLINE_MODE: true
       service:
+        REQUIRE_SIGNIN_VIEW: true
+        ENABLE_INTERNAL_SIGNIN: false
         ALLOW_ONLY_EXTERNAL_REGISTRATION: true
       repository:
         DISABLED_REPO_UNITS: repo.wiki,repo.projects
@@ -68,8 +70,9 @@ forgejo:
         provider: openidConnect
         autoDiscoverUrl: https://sso.ncraig.dev/oauth2/openid/forgejo/.well-known/openid-configuration
         existingSecret: forgejo-oauth-secret
+        scopes: "openid profile email groups"
         groupClaimName: groups
-        adminGroup: forgejo_admins
+        adminGroup: forgejo_admins@sso.ncraig.dev
 
   redis-cluster:
     enabled: false

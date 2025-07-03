@@ -2,6 +2,8 @@ forgejo:
   persistence:
     enabled: true
     storageClass: longhorn
+  strategy:
+    type: Recreate
 
   gitea:
     admin:

@@ -1,0 +1,10 @@
+apiVersion: v2
+name: forgejo
+version: "0.0.0"
+dependencies:
+  - name: forgejo
+    version: "12.5.3"
+    repository: oci://code.forgejo.org/forgejo-helm
+  - name: valkey
+    version: "3.0.16"
+    repository: oci://registry-1.docker.io/bitnamicharts

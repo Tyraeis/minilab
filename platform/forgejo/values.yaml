@@ -1,0 +1,56 @@
+forgejo:
+  persistence:
+    enabled: true
+    storageClass: longhorn
+
+  gitea:
+    admin:
+      existingSecret: forgejo-admin-secret
+
+    config:
+      server:
+        DOMAIN: git.ncraig.dev
+        ROOT_URL: https://git.ncraig.dev
+        OFFLINE_MODE: true
+      repository:
+        DISABLED_REPO_UNITS: repo.wiki,repo.projects
+        DISABLE_STARS: true
+      webhook:
+        ALLOWED_HOST_LIST: private,external
+      security:
+        LOGIN_REMEMBER_DAYS: 365
+
+      queue:
+        TYPE: &cache_type redis
+      session:
+        PROVIDER: *cache_type
+      cache:
+        ENABLED: true
+        ADAPTER: *cache_type
+
+    additionalConfigFromEnvs:
+      - name: FORGEJO__QUEUE__CONN_STR
+        valueFrom: &valkey_conn_str
+          secretKeyRef:
+            name: valkey-secret
+            key: valkey-connection-str
+      - name: FORGEJO__SESSION__PROVIDER_CONFIG
+        valueFrom: *valkey_conn_str
+      - name: FORGEJO__CACHE__HOST
+        valueFrom: *valkey_conn_str
+
+  redis-cluster:
+    enabled: false
+  redis:
+    enabled: false
+
+  postgresql-ha:
+    enabled: false
+  postgresql:
+    enabled: true
+
+valkey:
+  architecture: standalone
+  auth:
+    existingSecret: valkey-secret
+    existingSecretPasswordKey: valkey-password

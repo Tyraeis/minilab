@@ -18,6 +18,7 @@ argo-cd:
         issuer: "https://sso.ncraig.dev/oauth2/openid/argocd"
         clientID: argocd
         clientSecret: $oidc.client.secret
+        enablePKCEAuthentication: true
         requestedScopes:
           - "openid"
           - "profile"

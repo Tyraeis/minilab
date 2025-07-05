@@ -5,6 +5,10 @@ forgejo:
   strategy:
     type: Recreate
 
+  service:
+    ssh:
+      type: LoadBalancer
+
   ingress:
     enabled: true
     className: nginx

@@ -17,7 +17,7 @@ argo-cd:
         name: "Kanidm"
         issuer: "https://sso.ncraig.dev/oauth2/openid/argocd"
         clientID: argocd
-        clientSecret: $oidc.client.secret
+        clientSecret: $argocd-oidc-secret:oidc.client.secret
         requestedScopes:
           - "openid"
           - "profile"

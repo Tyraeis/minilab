@@ -15,6 +15,7 @@ spec:
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
+            fsGroup: 1000
           containers:
             - name: renovate
               image: renovate/renovate:{{ .Chart.AppVersion }}
@@ -27,9 +28,12 @@ spec:
                 - secretRef:
                     name: renovate-env-secret
               volumeMounts:
-                - mountPath: /tmp/renovate
+                - mountPath: /tmp
                   name: work
+                - mountPath: /opt/containerbase
+                  name: containerbase
               securityContext:
+                readOnlyRootFilesystem: true
                 runAsNonRoot: true
                 allowPrivilegeEscalation: false
                 seccompProfile:
@@ -38,4 +42,6 @@ spec:
                   drop: [ALL]
           volumes:
             - name: work
+              emptyDir: {}
+            - name: containerbase
               emptyDir: {}

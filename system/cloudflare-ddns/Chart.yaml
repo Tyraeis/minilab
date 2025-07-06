@@ -1,4 +1,5 @@
 apiVersion: v2
 name: cloudflare-ddns
 version: "0.1.0"
+# renovate: image=favonia/cloudflare-ddns
 appVersion: "1.15.1"

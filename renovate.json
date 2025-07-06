@@ -1,0 +1,30 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "kubernetes": {
+    "managerFilePatterns": [
+      "@(system|platform|apps)/*/templates/**/*.yaml"
+    ]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "datasourceTemplate": "docker",
+      "managerFilePatterns": [
+        "/(^|/)Chart\\.yaml$/"
+      ],
+      "matchStrings": [
+        "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
+      ]
+    },
+    {
+      "customType": "regex",
+      "datasourceTemplate": "docker",
+      "managerFilePatterns": [
+        "metal/vars.yaml"
+      ],
+      "matchStrings": [
+        "#\\s*renovate: image=(?<depName>.*?)\\s+[\\w_\\-]+:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@ spec:
             runAsGroup: 1000
           containers:
             - name: renovate
-              image: renovate/renovate:41.17.2
+              image: renovate/renovate:{{ .Chart.AppVersion }}
               env:
                 - name: RENOVATE_BASE_DIR
                   value: /tmp/renovate

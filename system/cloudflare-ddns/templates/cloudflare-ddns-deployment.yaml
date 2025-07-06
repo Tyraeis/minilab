@@ -22,7 +22,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: *name
-          image: favonia/cloudflare-ddns:1.15.1
+          image: favonia/cloudflare-ddns:{{ .Chart.Version }}
           env:
           - name: DOMAINS
             value: "{{ .Values.domain }}"

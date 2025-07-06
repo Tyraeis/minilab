@@ -30,7 +30,6 @@ spec:
                 - mountPath: /tmp/renovate
                   name: work
               securityContext:
-                readOnlyRootFilesystem: true
                 runAsNonRoot: true
                 allowPrivilegeEscalation: false
                 seccompProfile:

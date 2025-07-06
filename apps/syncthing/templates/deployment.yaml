@@ -21,7 +21,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: syncthing
-          image: "syncthing/syncthing:1.29"
+          image: "syncthing/syncthing:{{ .Chart.AppVersion }}"
           ports:
             - name: http
               containerPort: 8384

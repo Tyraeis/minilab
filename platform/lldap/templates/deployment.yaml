@@ -21,7 +21,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: {{ .Chart.Name }}
-          image: "lldap/lldap:v0.6.1-alpine-rootless"
+          image: "lldap/lldap:{{ .Chart.AppVersion }}"
 
           env:
           - name: TZ

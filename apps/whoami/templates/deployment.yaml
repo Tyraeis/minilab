@@ -19,7 +19,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: {{ .Chart.Name }}
-          image: "traefik/whoami:v1.11"
+          image: "traefik/whoami:{{ .Chart.AppVersion }}"
           env:
             - name: WHOAMI_PORT_NUMBER
               value: "8080"

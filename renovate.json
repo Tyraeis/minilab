@@ -28,6 +28,28 @@
       "matchStrings": [
         "#\\s*renovate: image=(?<depName>.*?)\\s+[\\w_\\-]+:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
       ]
+    },
+    {
+      "customType": "regex",
+      "datasourceTemplate": "docker",
+      "managerFilePatterns": [
+        "metal/controlplane.yaml.j2"
+      ],
+      "matchStrings": [
+        "image:\\s*(?<depName>[\\w\\.\\-\\/]+):(?<currentValue>[\\w+\\.\\-]*)"
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "registry.k8s.io/*",
+        "ghcr.io/siderolabs/kubelet"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "groupName": "kubernetes-controlplane"
     }
   ]
 }

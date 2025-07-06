@@ -20,7 +20,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: kanidm
-          image: "kanidm/server:1.6.4"
+          image: kanidm/server:{{ .Chart.AppVersion }}
           ports:
             - name: https
               containerPort: 8443

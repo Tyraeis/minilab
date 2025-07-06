@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: renovate
+  labels:
+    {{- include "renovate.labels" . | nindent 4 }}
+spec:
+  schedule: "@hourly"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+          containers:
+            - name: renovate
+              image: renovate/renovate:41.17.2
+              env:
+                - name: RENOVATE_BASE_DIR
+                  value: /tmp/renovate
+              envFrom:
+                - configMapRef:
+                    name: renovate-env-cm
+                - secretRef:
+                    name: renovate-env-secret
+              volumeMounts:
+                - mountPath: /tmp/renovate
+                  name: work
+              securityContext:
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop: [ALL]
+          volumes:
+            - name: work
+              emptyDir: {}

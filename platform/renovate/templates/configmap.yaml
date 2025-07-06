@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: renovate-env-cm
+  labels:
+    {{- include "renovate.labels" . | nindent 4 }}
+data:
+  RENOVATE_PLATFORM: gitea
+  RENOVATE_ENDPOINT: https://git.ncraig.dev/api/v1
+  RENOVATE_GIT_AUTHOR: Renovate Bot <renovate.bot@ncraig.dev>
+  RENOVATE_AUTODISCOVER: "true"

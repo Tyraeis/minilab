@@ -19,8 +19,8 @@
     {
       "customType": "regex",
       "datasourceTemplate": "docker",
-      "includePaths": [
-        "/metal/vars.yaml"
+      "managerFilePatterns": [
+        "metal/vars.yaml"
       ],
       "matchStrings": [
         "#\\s*renovate: image=(?<depName>.*?)\\s+[\\w_\\-]:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"

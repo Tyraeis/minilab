@@ -10,6 +10,16 @@
       "matchStrings": [
         "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
       ]
+    },
+    {
+      "customType": "regex",
+      "datasourceTemplate": "docker",
+      "managerFilePatterns": [
+        "/metal/vars.yaml"
+      ],
+      "matchStrings": [
+        "#\\s*renovate: image=(?<depName>.*?)\\s+[\\w_\\-]:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
+      ]
     }
   ]
 }

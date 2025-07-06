@@ -1,5 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "kubernetes": {
+    "managerFilePatterns": [
+      "@(system|platform|apps)/*/templates/**/*.yaml"
+    ]
+  },
   "customManagers": [
     {
       "customType": "regex",
@@ -14,7 +19,7 @@
     {
       "customType": "regex",
       "datasourceTemplate": "docker",
-      "managerFilePatterns": [
+      "includePaths": [
         "/metal/vars.yaml"
       ],
       "matchStrings": [

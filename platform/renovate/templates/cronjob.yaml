@@ -21,17 +21,15 @@ spec:
               image: renovate/renovate:{{ .Chart.AppVersion }}
               env:
                 - name: RENOVATE_BASE_DIR
-                  value: /tmp/renovate
+                  value: /opt/renovate
               envFrom:
                 - configMapRef:
                     name: renovate-env-cm
                 - secretRef:
                     name: renovate-env-secret
               volumeMounts:
-                - mountPath: /tmp
-                  name: work
-                - mountPath: /opt/containerbase
-                  name: containerbase
+                - mountPath: /opt
+                  name: renovate-cache
               securityContext:
                 readOnlyRootFilesystem: true
                 runAsNonRoot: true
@@ -41,7 +39,6 @@ spec:
                 capabilities:
                   drop: [ALL]
           volumes:
-            - name: work
-              emptyDir: {}
-            - name: containerbase
-              emptyDir: {}
+            - name: renovate-cache
+              persistentVolumeClaim:
+                claimName: renovate-cache

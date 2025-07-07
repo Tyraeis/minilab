@@ -28,6 +28,8 @@ spec:
                 - secretRef:
                     name: renovate-env-secret
               volumeMounts:
+                - mountPath: /tmp
+                  name: tmp
                 - mountPath: /opt
                   name: renovate-cache
               securityContext:
@@ -39,6 +41,8 @@ spec:
                 capabilities:
                   drop: [ALL]
           volumes:
+            - name: tmp
+              emptyDir: {}
             - name: renovate-cache
               persistentVolumeClaim:
                 claimName: renovate-cache

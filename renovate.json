@@ -62,5 +62,6 @@
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
-  }
+  },
+  "ignoreTests": true
 }

@@ -42,6 +42,13 @@
   ],
   "packageRules": [
     {
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
+    },
+    {
       "matchPackageNames": [
         "registry.k8s.io/*",
         "ghcr.io/siderolabs/kubelet"
@@ -51,5 +58,9 @@
       ],
       "groupName": "kubernetes-controlplane"
     }
-  ]
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  }
 }

@@ -3,3 +3,7 @@ name: homepage
 version: "0.0.0"
 # renovate: image=ghcr.io/gethomepage/homepage
 appVersion: "v1.3.2"
+dependencies:
+- name: oauth2-proxy
+  version: "7.12.19"
+  repository: https://oauth2-proxy.github.io/manifests/

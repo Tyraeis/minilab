@@ -1,0 +1,11 @@
+hostname: &hostname whoami.ncraig.dev
+secretName: whoami-ncraig-dev-cert
+
+oauth2-proxy:
+  config:
+    existingSecret: whoami-oauth-secret
+  ingress:
+    enabled: true
+    hosts:
+    - *hostname
+    path: /oauth2

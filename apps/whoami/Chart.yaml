@@ -5,3 +5,7 @@ type: application
 version: 0.1.0
 # renovate: image=traefik/whoami
 appVersion: "v1.11"
+dependencies:
+- name: oauth2-proxy
+  version: "7.12.19"
+  repository: https://oauth2-proxy.github.io/manifests/

@@ -3,3 +3,7 @@ name: syncthing
 version: "0.0.0"
 # renovate: image=syncthing/syncthing
 appVersion: "1.30"
+dependencies:
+- name: oauth2-proxy
+  version: "7.12.19"
+  repository: https://oauth2-proxy.github.io/manifests/

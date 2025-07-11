@@ -1,0 +1,20 @@
+hostname: &hostname syncthing.ncraig.dev
+tlsSecretName: syncthing-ncraig-dev-cert
+
+oauth2-proxy:
+  config:
+    existingSecret: syncthing-oauth-secret
+    configFile: |
+      provider = "oidc"
+      email_domains = "*"
+      oidc_email_claim = "sub"
+      upstreams = "file:///dev/null"
+      oidc_issuer_url = "https://sso.ncraig.dev/oauth2/openid/syncthing"
+      code_challenge_method = "S256"
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+    - *hostname
+    path: /oauth2
+    pathType: Prefix

@@ -6,6 +6,7 @@ oauth2-proxy:
     existingSecret: whoami-oauth-secret
   ingress:
     enabled: true
+    className: nginx
     hosts:
     - *hostname
     path: /oauth2

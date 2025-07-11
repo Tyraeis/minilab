@@ -9,3 +9,4 @@ oauth2-proxy:
     hosts:
     - *hostname
     path: /oauth2
+    pathType: Prefix

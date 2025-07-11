@@ -4,6 +4,12 @@ secretName: whoami-ncraig-dev-cert
 oauth2-proxy:
   config:
     existingSecret: whoami-oauth-secret
+    configFile: |
+      provider = "oidc"
+      email_domains = "*"
+      upstreams = "file:///dev/null"
+      oidc_issuer_url = "https://sso.ncraig.dev/oauth2/openid/whoami"
+      code_challenge_method = "S256"
   ingress:
     enabled: true
     className: nginx

@@ -1,0 +1,18 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: kanidm
+  labels:
+    {{- include "kanidm.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`{{ .Values.domain }}`)
+      services:
+        - name: kanidm
+          port: 443
+          serversTransport: kanidm
+  tls:
+    secretName: {{ .Values.tls_secret }}

@@ -57,7 +57,8 @@
       "matchDatasources": [
         "docker"
       ],
-      "groupName": "kubernetes-controlplane"
+      "groupName": "kubernetes-controlplane",
+      "automerge": false
     }
   ],
   "lockFileMaintenance": {

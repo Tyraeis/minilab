@@ -6,15 +6,14 @@ metadata:
     {{- include "whoami.labels" . | nindent 4 }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
-    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-oauth2-proxy@kubernetescrd
     gethomepage.dev/enabled: "true"
     gethomepage.dev/group: Services
     gethomepage.dev/name: whoami
     gethomepage.dev/description: Debug Site
     gethomepage.dev/icon: mdi-help-network-outline.svg
 spec:
-  ingressClassName: "nginx"
+  ingressClassName: traefik
   tls:
     - hosts:
         - {{ .Values.hostname }}

@@ -13,7 +13,7 @@ oauth2-proxy:
       code_challenge_method = "S256"
   ingress:
     enabled: true
-    className: nginx
+    className: traefik
     hosts:
     - *hostname
     path: /oauth2

@@ -1,0 +1,12 @@
+traefik:
+  ports:
+    web:
+      allowACMEByPass: true
+    websecure:
+      asDefault: true
+      allowACMEByPass: true
+
+  service:
+    spec:
+      externalTrafficPolicy: Local
+      loadBalancerIP: 192.168.5.64

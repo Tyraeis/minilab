@@ -1,0 +1,33 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+  namespace: argocd
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Cluster Management
+    gethomepage.dev/name: Argo CD
+    gethomepage.dev/description: Continuous Deployment
+    gethomepage.dev/icon: sh-argo-cd.svg
+    gethomepage.dev/widget.type: argocd
+    gethomepage.dev/widget.url: http://argocd-server.argocd.svc.cluster.local
+    gethomepage.dev/widget.key: "{{`{{HOMEPAGE_VAR_ARGOCD_TOKEN}}`}}"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`argocd.ncraig.dev`)
+      priority: 10
+      services:
+        - name: argocd-server
+          port: 80
+    - kind: Rule
+      match: Host(`argocd.ncraig.dev`) && Header(`Content-Type`, `application/grpc`)
+      priority: 11
+      services:
+        - name: argocd-server
+          port: 80
+          scheme: h2c
+  tls:
+    secretName: argocd-ncraig-dev-cert

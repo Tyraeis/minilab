@@ -36,36 +36,6 @@ argo-cd:
   server:
     replicas: 1
 
-    ingress:
-      enabled: true
-      ingressClassName: nginx
-      annotations:
-        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-        cert-manager.io/cluster-issuer: letsencrypt-prod
-        gethomepage.dev/enabled: "true"
-        gethomepage.dev/group: Cluster Management
-        gethomepage.dev/name: Argo CD
-        gethomepage.dev/description: Continuous Deployment
-        gethomepage.dev/icon: sh-argo-cd.svg
-        gethomepage.dev/widget.type: argocd
-        gethomepage.dev/widget.url: http://argocd-server.argocd.svc.cluster.local
-        gethomepage.dev/widget.key: "{{`{{HOMEPAGE_VAR_ARGOCD_TOKEN}}`}}"
-      extraTls:
-        - hosts:
-            - argocd.ncraig.dev
-          secretName: argocd-ncraig-dev-cert
-
-    ingressGrpc:
-      enabled: true
-      ingressClassName: nginx
-      annotations:
-        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
-        cert-manager.io/cluster-issuer: letsencrypt-prod
-      extraTls:
-        - hosts:
-            - grpc.argocd.ncraig.dev
-          secretName: grpc-argocd-ncraig-dev-cert
-
   dex:
     enabled: false
 
@@ -74,15 +44,15 @@ argocd-apps:
     root:
       namespace: argocd
       goTemplate: true
-      goTemplateOptions: ["missingkey=error"]
+      goTemplateOptions: [ "missingkey=error" ]
       generators:
-        - git:
-            repoURL: &repoURL ssh://git@git.ncraig.dev/noahc/minilab.git
-            revision: &revision main
-            directories:
-              - path: system/*
-              - path: platform/*
-              - path: apps/*
+      - git:
+          repoURL: &repoURL ssh://git@git.ncraig.dev/noahc/minilab.git
+          revision: &revision main
+          directories:
+          - path: system/*
+          - path: platform/*
+          - path: apps/*
       template:
         metadata:
           name: "{{.path.basenameNormalized}}"
@@ -106,6 +76,6 @@ argocd-apps:
                 factor: 2
                 maxDuration: 3m
             syncOptions:
-              - CreateNamespace=true
-              - ApplyOutOfSyncOnly=true
-              - ServerSideApply=true
+            - CreateNamespace=true
+            - ApplyOutOfSyncOnly=true
+            - ServerSideApply=true

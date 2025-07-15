@@ -4,6 +4,8 @@ metadata:
   name: kanidm
   labels:
     {{- include "kanidm.labels" . | nindent 4 }}
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: https
 spec:
   type: ClusterIP
   ports:

@@ -11,7 +11,7 @@ forgejo:
 
   ingress:
     enabled: true
-    className: nginx
+    className: traefik
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       gethomepage.dev/enabled: "true"
@@ -20,14 +20,14 @@ forgejo:
       gethomepage.dev/description: Git Server
       gethomepage.dev/icon: sh-forgejo.svg
     hosts:
-      - host: &host git.ncraig.dev
-        paths:
-          - path: /
-            pathType: Prefix
+    - host: &host git.ncraig.dev
+      paths:
+      - path: /
+        pathType: Prefix
     tls:
-      - secretName: git-ncraig-dev-cert
-        hosts:
-          - *host
+    - secretName: git-ncraig-dev-cert
+      hosts:
+      - *host
 
   gitea:
     admin:
@@ -59,24 +59,24 @@ forgejo:
         ADAPTER: *cache_type
 
     additionalConfigFromEnvs:
-      - name: FORGEJO__QUEUE__CONN_STR
-        valueFrom: &valkey_conn_str
-          secretKeyRef:
-            name: valkey-secret
-            key: valkey-connection-str
-      - name: FORGEJO__SESSION__PROVIDER_CONFIG
-        valueFrom: *valkey_conn_str
-      - name: FORGEJO__CACHE__HOST
-        valueFrom: *valkey_conn_str
+    - name: FORGEJO__QUEUE__CONN_STR
+      valueFrom: &valkey_conn_str
+        secretKeyRef:
+          name: valkey-secret
+          key: valkey-connection-str
+    - name: FORGEJO__SESSION__PROVIDER_CONFIG
+      valueFrom: *valkey_conn_str
+    - name: FORGEJO__CACHE__HOST
+      valueFrom: *valkey_conn_str
 
     oauth:
-      - name: kanidm
-        provider: openidConnect
-        autoDiscoverUrl: https://sso.ncraig.dev/oauth2/openid/forgejo/.well-known/openid-configuration
-        existingSecret: forgejo-oauth-secret
-        scopes: "openid profile email groups"
-        groupClaimName: groups
-        adminGroup: forgejo_admins@sso.ncraig.dev
+    - name: kanidm
+      provider: openidConnect
+      autoDiscoverUrl: https://sso.ncraig.dev/oauth2/openid/forgejo/.well-known/openid-configuration
+      existingSecret: forgejo-oauth-secret
+      scopes: "openid profile email groups"
+      groupClaimName: groups
+      adminGroup: forgejo_admins@sso.ncraig.dev
 
   redis-cluster:
     enabled: false

@@ -1,14 +1,15 @@
+hostname: &hostname longhorn.ncraig.dev
+
 longhorn:
   ingress:
     enabled: true
-    ingressClassName: nginx
-    host: &hostname longhorn.ncraig.dev
+    ingressClassName: traefik
+    host: *hostname
     tls: true
     tlsSecret: longhorn-ncraig-dev-cert
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
-      nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
-      nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+      traefik.ingress.kubernetes.io/router.middlewares: longhorn-oauth2-proxy@kubernetescrd
       gethomepage.dev/enabled: "true"
       gethomepage.dev/group: Cluster Management
       gethomepage.dev/name: Longhorn
@@ -37,7 +38,7 @@ oauth2-proxy:
       code_challenge_method = "S256"
   ingress:
     enabled: true
-    className: nginx
+    className: traefik
     hosts:
     - *hostname
     path: /oauth2

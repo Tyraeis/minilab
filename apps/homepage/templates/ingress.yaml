@@ -6,10 +6,9 @@ metadata:
     app.kubernetes.io/name: homepage
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
-    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-oauth2-proxy@kubernetescrd
 spec:
-  ingressClassName: "nginx"
+  ingressClassName: traefik
   tls:
     - hosts:
         - {{ .Values.hostname }}

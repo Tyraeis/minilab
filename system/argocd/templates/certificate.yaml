@@ -1,8 +1,7 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: whoami
-  namespace: traefik
+  name: argocd-ncraig-dev-cert
 spec:
   secretName: argocd-ncraig-dev-cert
   dnsNames:

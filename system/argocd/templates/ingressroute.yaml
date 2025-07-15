@@ -17,17 +17,19 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`argocd.ncraig.dev`)
+      match: Host(`{{ .Values.hostname }}`)
       priority: 10
       services:
         - name: argocd-server
           port: 80
+          serversTransport: argocd
     - kind: Rule
-      match: Host(`argocd.ncraig.dev`) && Header(`Content-Type`, `application/grpc`)
+      match: Host(`{{ .Values.hostname }}`) && Header(`Content-Type`, `application/grpc`)
       priority: 11
       services:
         - name: argocd-server
           port: 80
           scheme: h2c
+          serversTransport: argocd
   tls:
     secretName: argocd-ncraig-dev-cert

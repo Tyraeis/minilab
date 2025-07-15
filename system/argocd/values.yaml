@@ -1,6 +1,8 @@
+hostname: &hostname argocd.ncraig.dev
+
 argo-cd:
   global:
-    domain: argocd.ncraig.dev
+    domain: *hostname
 
   configs:
     params:

@@ -8,7 +8,8 @@ oauth2-proxy:
       provider = "oidc"
       email_domains = "*"
       oidc_email_claim = "sub"
-      upstreams = "file:///dev/null"
+      upstreams = "static://202"
+      reverse_proxy = true
       oidc_issuer_url = "https://sso.ncraig.dev/oauth2/openid/whoami"
       code_challenge_method = "S256"
   ingress:

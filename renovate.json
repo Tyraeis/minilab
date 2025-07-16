@@ -59,6 +59,15 @@
       ],
       "groupName": "kubernetes-controlplane",
       "automerge": false
+    },
+    {
+      "matchPackageNames": [
+        "renovate/renovate"
+      ],
+      "schedule": [
+        "* 4-6 * * *"
+      ],
+      "automergeType": "branch"
     }
   ],
   "lockFileMaintenance": {

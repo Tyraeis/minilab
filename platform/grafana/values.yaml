@@ -3,7 +3,7 @@ grafana:
     enabled: true
     ingressClassName: traefik
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-stg
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
     - &host grafana.ncraig.dev
     tls:

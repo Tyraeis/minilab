@@ -1,0 +1,35 @@
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+    - &host grafana.ncraig.dev
+    tls:
+    - secretName: grafana-ncraig-dev-cert
+      hosts:
+      - *host
+  sidecar:
+    dashboards:
+      enabled: true
+      searchNamespace: prometheus
+    datasources:
+      enabled: true
+      searchNamespace: prometheus
+  envFromSecret: grafana-secret
+  grafana.ini:
+    server:
+      root_url: https://grafana.ncraig.dev
+    auth.generic_oauth:
+      enabled: true
+      allow_sign_up: true
+      name: Kanidm
+      client_id: grafana
+      client_secret: $__env{GRAFANA_SSO_CLIENT_SECRET}
+      scopes: openid profile email groups
+      auth_url: https://sso.ncraig.dev/ui/oauth2
+      token_url: https://sso.ncraig.dev/oauth2/token
+      api_url: https://sso.ncraig.dev/oauth2/openid/grafana/userinfo
+      use_pkce: true
+      use_refresh_token: true

@@ -1,0 +1,25 @@
+kube-prometheus-stack:
+  grafana:
+    enabled: false
+    forceDeployDatasources: true
+    forceDeployDashboards: true
+  alertmanager:
+    alertmanagerSpec:
+      secrets:
+      - discord-webhook-url
+    config:
+      route:
+        receiver: discord
+        group_by:
+        - namespace
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 6h
+        routes:
+        - receiver: discord
+          matchers:
+          - alertname = "Watchdog"
+      receivers:
+      - name: discord
+        discord_configs:
+        - webhook_url_file: /etc/alertmanager/secrets/discord-webhook-url/discord-webhook-url

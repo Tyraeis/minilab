@@ -20,23 +20,23 @@ machine:
     extraArgs:
       rotate-server-certificates: true # enable certificate rotation (for Metrics Server)
     extraMounts:
-      - destination: /var/lib/longhorn
-        type: bind
-        source: /var/lib/longhorn
-        options:
-          - bind
-          - rshared
-          - rw
+    - destination: /var/lib/longhorn
+      type: bind
+      source: /var/lib/longhorn
+      options:
+      - bind
+      - rshared
+      - rw
 
   # Provides machine specific network configuration options.
   network:
     hostname: "{{ hostname }}"
     interfaces:
-      - interface: eno1
-        addresses:
-          - "{{ inventory_hostname }}/22"
-        vip:
-          ip: "{{ virtual_ip }}"
+    - interface: eno1
+      addresses:
+      - "{{ inventory_hostname }}/22"
+      vip:
+        ip: "{{ virtual_ip }}"
 
   # Used to provide instructions for installations.
   install:
@@ -53,8 +53,8 @@ machine:
 
   kernel:
     modules:
-      - name: nvme_tcp
-      - name: vfio_pci
+    - name: nvme_tcp
+    - name: vfio_pci
 
   # Features describe individual Talos features that can be switched on or off.
   features:
@@ -84,10 +84,10 @@ cluster:
     dnsDomain: cluster.local # The domain used by Kubernetes DNS.
     # The pod subnet CIDR.
     podSubnets:
-      - 10.244.0.0/16
+    - 10.244.0.0/16
     # The service subnet CIDR.
     serviceSubnets:
-      - 10.96.0.0/12
+    - 10.96.0.0/12
 
   token: "{{ secrets.bootstraptoken }}" # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
   secretboxEncryptionSecret: "{{ secrets.secretboxencryptionsecret }}" # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
@@ -107,35 +107,36 @@ cluster:
     image: registry.k8s.io/kube-apiserver:v1.33.3 # The container image used in the API server manifest.
     # Extra certificate subject alternative names for the API server's certificate.
     certSANs:
-      - "{{ virtual_ip }}"
+    - "{{ virtual_ip }}"
     disablePodSecurityPolicy: true # Disable PodSecurityPolicy in the API server and default manifests.
     # Configure the API server admission plugins.
     admissionControl:
-      - name: PodSecurity # Name is the name of the admission controller.
-        # Configuration is an embedded configuration object to be used as the plugin's
-        configuration:
-          apiVersion: pod-security.admission.config.k8s.io/v1alpha1
-          defaults:
-            audit: restricted
-            audit-version: latest
-            enforce: baseline
-            enforce-version: latest
-            warn: restricted
-            warn-version: latest
-          exemptions:
-            namespaces:
-              - kube-system
-              - metallb
-              - longhorn
-            runtimeClasses: []
-            usernames: []
-          kind: PodSecurityConfiguration
+    - name: PodSecurity # Name is the name of the admission controller.
+      # Configuration is an embedded configuration object to be used as the plugin's
+      configuration:
+        apiVersion: pod-security.admission.config.k8s.io/v1alpha1
+        defaults:
+          audit: restricted
+          audit-version: latest
+          enforce: baseline
+          enforce-version: latest
+          warn: restricted
+          warn-version: latest
+        exemptions:
+          namespaces:
+          - kube-system
+          - metallb
+          - longhorn
+          - prometheus
+          runtimeClasses: []
+          usernames: []
+        kind: PodSecurityConfiguration
     # Configure the API server audit policy.
     auditPolicy:
       apiVersion: audit.k8s.io/v1
       kind: Policy
       rules:
-        - level: Metadata
+      - level: Metadata
 
   # Controller manager server specific configuration options.
   controllerManager:
@@ -158,7 +159,7 @@ cluster:
       service: {}
       # # External service endpoint.
       # endpoint: https://discovery.talos.dev/
-  # Etcd specific configuration options.
+      # Etcd specific configuration options.
   etcd:
     # The `ca` is the root certificate authority of the PKI.
     ca:

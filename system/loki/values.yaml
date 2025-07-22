@@ -9,6 +9,7 @@ loki:
         index:
           prefix: loki_index_
           period: 24h
+    auth_enabled: false
 
   chunksCache:
     writebackSizeLimit: 10MB
@@ -60,4 +61,4 @@ promtail:
   config:
     logLevel: info
     clients:
-    - url: http://loki-gateway.loki.svc.cluster.local:3100/loki/api/v1/push
+    - url: http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push

@@ -3,6 +3,10 @@ kube-prometheus-stack:
     enabled: false
     forceDeployDatasources: true
     forceDeployDashboards: true
+    additionalDataSources:
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.loki.svc.cluster.local
   alertmanager:
     alertmanagerSpec:
       secrets:

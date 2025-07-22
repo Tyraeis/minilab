@@ -10,6 +10,11 @@ loki:
           prefix: loki_index_
           period: 24h
     auth_enabled: false
+    pattern_ingester:
+      enabled: true
+    limits_config:
+      allow_structured_metadata: true
+      volume_enabled: true
 
   chunksCache:
     writebackSizeLimit: 10MB
@@ -20,14 +25,14 @@ loki:
 
   deploymentMode: SingleBinary
   singleBinary:
-    replicas: 1
+    replicas: 3
     resources:
       limits:
-        cpu: 2
+        cpu: 1
         memory: 2Gi
       requests:
-        cpu: 1
-        memory: 1Gi
+        cpu: 0.5
+        memory: 512Mi
     extraEnv:
     - name: GOMEMLIMIT
       value: 1920MiB

@@ -21,6 +21,10 @@ grafana:
   grafana.ini:
     server:
       root_url: https://grafana.ncraig.dev
+    security:
+      disable_initial_admin_creation: true
+    auth:
+      disable_login_form: true
     auth.generic_oauth:
       enabled: true
       allow_sign_up: true
@@ -33,3 +37,5 @@ grafana:
       api_url: https://sso.ncraig.dev/oauth2/openid/grafana/userinfo
       use_pkce: true
       use_refresh_token: true
+      allow_assign_grafana_admin: true
+      role_attribute_path: "contains(groups[*], 'grafana_admins@sso.ncraig.dev') && 'Admin' || 'Viewer'"

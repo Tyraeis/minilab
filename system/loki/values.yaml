@@ -10,6 +10,9 @@ loki:
           prefix: loki_index_
           period: 24h
 
+  chunksCache:
+    allocatedMemory: 1024
+
   deploymentMode: SimpleScalable
 
   backend:

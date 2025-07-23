@@ -19,7 +19,7 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: status.hostIP
-        image: docker.io/haproxy:2.9
+        image: docker.io/haproxy:3.2
         name: haproxy
         securityContext:
           allowPrivilegeEscalation: false

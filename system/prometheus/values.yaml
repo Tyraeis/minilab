@@ -50,3 +50,7 @@ kube-prometheus-stack:
       - name: discord
         discord_configs:
         - webhook_url: http://localhost:1234
+  kubeEtcd:
+    service:
+      selector:
+        app: metrics-proxy

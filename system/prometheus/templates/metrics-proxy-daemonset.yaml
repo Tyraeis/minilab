@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: metrics-proxy
+  namespace: kube-system
 spec:
   selector:
     matchLabels:

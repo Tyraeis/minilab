@@ -9,8 +9,19 @@ kube-prometheus-stack:
       url: http://loki-gateway.loki.svc.cluster.local
   alertmanager:
     alertmanagerSpec:
-      secrets:
-      - discord-webhook-url
+      containers:
+      - name: webhook-relay
+        image: nginx:latest
+        envFrom:
+        - secretRef:
+            name: discord-webhook-url
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/templates
+      volumes:
+      - name: config
+        configMap:
+          name: discord-webhook-relay-config
     config:
       route:
         receiver: discord
@@ -26,4 +37,4 @@ kube-prometheus-stack:
       receivers:
       - name: discord
         discord_configs:
-        - webhook_url_file: /etc/alertmanager/secrets/discord-webhook-url/discord-webhook-url
+        - webhook_url: https://localhost:1234

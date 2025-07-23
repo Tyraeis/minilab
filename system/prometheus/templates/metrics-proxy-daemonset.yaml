@@ -1,0 +1,41 @@
+# https://github.com/prometheus-community/helm-charts/issues/1704#issuecomment-1100607982
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: metrics-proxy
+spec:
+  selector:
+    matchLabels:
+      app: metrics-proxy
+  template:
+    metadata:
+      labels:
+        app: metrics-proxy
+    spec:
+      containers:
+      - env:
+        - name: NODE_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
+        image: docker.io/haproxy:2.5
+        name: haproxy
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 99 # 'haproxy' user
+        volumeMounts:
+        - mountPath: /usr/local/etc/haproxy
+          name: config
+      hostNetwork: true
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      volumes:
+      - configMap:
+          name: metrics-proxy-config
+        name: config

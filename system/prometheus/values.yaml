@@ -49,4 +49,4 @@ kube-prometheus-stack:
       receivers:
       - name: discord
         discord_configs:
-        - webhook_url: https://localhost:1234
+        - webhook_url: http://localhost:1234

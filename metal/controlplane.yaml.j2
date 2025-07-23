@@ -166,6 +166,8 @@ cluster:
     ca:
       crt: "{{ certs.etcd.crt }}"
       key: "{{ certs.etcd.key }}"
+    extraArgs:
+      listen-metrics-urls: http://127.0.0.1:2381
 
   # # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
 

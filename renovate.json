@@ -74,5 +74,6 @@
     "enabled": true,
     "automerge": true
   },
-  "ignoreTests": true
+  "ignoreTests": true,
+  "prConcurrentLimit": 0
 }

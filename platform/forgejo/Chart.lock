@@ -1,9 +1,9 @@
 dependencies:
 - name: forgejo
   repository: oci://code.forgejo.org/forgejo-helm
-  version: 12.5.4
+  version: 13.0.0
 - name: valkey
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 3.0.22
-digest: sha256:519aac15e4360fb9fa3e586ff14ce3abaa0e57cd4c1115630046611757aa681d
-generated: "2025-07-24T17:25:52.708324741Z"
+digest: sha256:b1960d4e38e81870101f6b0879844a550dea29bead4469fb550f5e50f455ed4e
+generated: "2025-07-24T18:00:55.978318681Z"

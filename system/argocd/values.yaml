@@ -49,7 +49,7 @@ argocd-apps:
       goTemplateOptions: [ "missingkey=error" ]
       generators:
       - git:
-          repoURL: &repoURL ssh://git@git.ncraig.dev/noahc/minilab.git
+          repoURL: &repoURL git@github.com:Tyraeis/minilab.git
           revision: &revision main
           directories:
           - path: system/*

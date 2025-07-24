@@ -65,6 +65,6 @@ forgejo:
     enabled: false
 
   postgresql-ha:
-    enabled: false
-  postgresql:
     enabled: true
+  postgresql:
+    enabled: false

@@ -78,18 +78,18 @@ forgejo:
       groupClaimName: groups
       adminGroup: forgejo_admins@sso.ncraig.dev
 
-  redis-cluster:
+  valkey-cluster:
     enabled: false
-  redis:
-    enabled: false
+  valkey:
+    enabled: true
+    architecture: replication
+    sentinel:
+      enabled: true
+    auth:
+      existingSecret: valkey-secret
+      existingSecretPasswordKey: valkey-password
 
   postgresql-ha:
     enabled: false
   postgresql:
     enabled: true
-
-valkey:
-  architecture: standalone
-  auth:
-    existingSecret: valkey-secret
-    existingSecretPasswordKey: valkey-password

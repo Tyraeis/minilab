@@ -50,25 +50,6 @@ forgejo:
       security:
         LOGIN_REMEMBER_DAYS: 365
 
-      queue:
-        TYPE: &cache_type redis
-      session:
-        PROVIDER: *cache_type
-      cache:
-        ENABLED: true
-        ADAPTER: *cache_type
-
-    additionalConfigFromEnvs:
-    - name: FORGEJO__QUEUE__CONN_STR
-      valueFrom: &valkey_conn_str
-        secretKeyRef:
-          name: valkey-secret
-          key: valkey-connection-str
-    - name: FORGEJO__SESSION__PROVIDER_CONFIG
-      valueFrom: *valkey_conn_str
-    - name: FORGEJO__CACHE__HOST
-      valueFrom: *valkey_conn_str
-
     oauth:
     - name: kanidm
       provider: openidConnect
@@ -79,15 +60,9 @@ forgejo:
       adminGroup: forgejo_admins@sso.ncraig.dev
 
   valkey-cluster:
-    enabled: false
-  valkey:
     enabled: true
-    architecture: replication
-    sentinel:
-      enabled: true
-    auth:
-      existingSecret: valkey-secret
-      existingSecretPasswordKey: valkey-password
+  valkey:
+    enabled: false
 
   postgresql-ha:
     enabled: false

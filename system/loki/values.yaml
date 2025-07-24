@@ -27,15 +27,15 @@ loki:
   singleBinary:
     replicas: 3
     resources:
-      limits:
-        cpu: 1
-        memory: 2Gi
       requests:
-        cpu: 0.5
-        memory: 512Mi
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 375m
+        memory: 384Mi
     extraEnv:
     - name: GOMEMLIMIT
-      value: 1920MiB
+      value: 250MiB
 
   backend:
     replicas: 0

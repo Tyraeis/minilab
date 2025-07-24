@@ -1,9 +1,9 @@
 dependencies:
 - name: longhorn
   repository: https://charts.longhorn.io
-  version: 1.9.0
+  version: 1.9.1
 - name: oauth2-proxy
   repository: https://oauth2-proxy.github.io/manifests/
   version: 7.14.2
-digest: sha256:4d8d1bc556ea993959ab2fd370b2b50219f321ebdb3e7b1270d811152a366306
-generated: "2025-07-21T17:01:09.655320452Z"
+digest: sha256:53b7e06ceed93080011803e9e84ac3a961c167bd8423943339f04e679e082643
+generated: "2025-07-24T17:20:38.699412562Z"

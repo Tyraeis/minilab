@@ -1,0 +1,3 @@
+overlay:
+  image: ghcr.io/siderolabs/sbc-rockchip
+  name: rockpi4

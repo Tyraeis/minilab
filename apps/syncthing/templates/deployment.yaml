@@ -35,6 +35,8 @@ spec:
               protocol: UDP
           volumeMounts:
             - mountPath: /var/syncthing
+              name: syncthing-config
+            - mountPath: /opt/syncthing
               name: syncthing-data
           securityContext:
             readOnlyRootFilesystem: true
@@ -48,3 +50,6 @@ spec:
       - name: syncthing-data
         persistentVolumeClaim:
           claimName: syncthing-data
+      - name: syncthing-config
+        persistentVolumeClaim:
+          claimName: syncthing-config

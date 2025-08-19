@@ -3,4 +3,4 @@ cluster_endpoint: https://k8s.local:6443
 lan_cidr_suffix: /22
 
 # renovate: image=ghcr.io/siderolabs/installer
-talos_version: "1.10.5"
+talos_version: "1.10.6"

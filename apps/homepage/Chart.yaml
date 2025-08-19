@@ -2,8 +2,8 @@ apiVersion: v2
 name: homepage
 version: "0.0.0"
 # renovate: image=ghcr.io/gethomepage/homepage
-appVersion: "v1.4.0"
+appVersion: "v1.4.5"
 dependencies:
 - name: oauth2-proxy
-  version: "7.14.2"
+  version: "8.0.1"
   repository: https://oauth2-proxy.github.io/manifests/

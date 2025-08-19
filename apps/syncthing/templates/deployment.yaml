@@ -19,6 +19,7 @@ spec:
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
+        fsGroup: 1000
       containers:
         - name: syncthing
           image: "syncthing/syncthing:{{ .Chart.AppVersion }}"
@@ -34,6 +35,8 @@ spec:
               protocol: UDP
           volumeMounts:
             - mountPath: /var/syncthing
+              name: syncthing-config
+            - mountPath: /opt/syncthing
               name: syncthing-data
           securityContext:
             readOnlyRootFilesystem: true
@@ -47,3 +50,6 @@ spec:
       - name: syncthing-data
         persistentVolumeClaim:
           claimName: syncthing-data
+      - name: syncthing-config
+        persistentVolumeClaim:
+          claimName: syncthing-config

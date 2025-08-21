@@ -54,6 +54,9 @@ def talosctl(*args: str, dry_run: bool, ip: str | None = None):
 def patch_config(config_file: str, patch_file: str):
   talosctl('machineconfig', 'patch', config_file, '--patch', f'@{patch_file}', '-o', config_file, dry_run=False)
 
+def validate_config(config_file: str):
+  talosctl('validate', '--config', config_file, '--mode', 'metal', '--strict', dry_run=False)
+
 def apply_config(ip: str, config_file: str, *, dry_run: bool):
   talosctl('apply-config', '--file', config_file, ip=ip, dry_run=dry_run)
 
@@ -69,11 +72,13 @@ def read_inventory(name: str) -> Inventory:
     return yaml.safe_load(f)
 
 
-
 def parse_args() -> Namespace:
   parser = ArgumentParser()
   parser.add_argument('-a', '--apply', action='store_true', help='apply talos config using talosctl apply-config')
   parser.add_argument('-u', '--upgrade', action='store_true', help='upgrade talos system using talosctl upgrade')
+  parser.add_argument('--group', action='store', default=None, help='only operate on nodes in the specified group')
+  parser.add_argument('--role', action='store', default=None, help='only operate on nodes with the specified role')
+  parser.add_argument('--hardware', action='store', default=None, help='only operate on nodes with the specified hardware')
   parser.add_argument('--dry-run', action='store_true')
   return parser.parse_args()
 
@@ -87,7 +92,15 @@ def main():
   imageFactory = ImageFactory()
   configRenderer = ConfigRenderer()
 
-  for group_name, group in read_inventory('prod').items():
+  inventory = {
+    group_name: group
+    for group_name, group in read_inventory('prod').items()
+    if args.group == None or group_name == args.group
+    if args.role == None or group['role'] == args.role
+    if args.hardware == None or group['hardware'] == args.hardware
+  }
+
+  for group_name, group in inventory.items():
     image_id = imageFactory.get_image_id(group['hardware'])
     for hostname, ip in group['nodes'].items():
       print(f'\n> {group_name}.{hostname} ({ip})')
@@ -98,6 +111,7 @@ def main():
         config_file.write(config)
 
       patch_config(config_filename, f'hardware/{group['hardware']}/patch.yaml')
+      validate_config(config_filename)
 
       if args.apply:
         apply_config(ip, config_filename, dry_run=args.dry_run)

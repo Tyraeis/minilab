@@ -27,10 +27,12 @@ machine:
   network:
     hostname: "{{ hostname }}"
     interfaces:
-    - deviceSelector:
-        physical: true
+    - interface: _ # filled in via hardware patch
+      dhcp: true
       addresses:
       - "{{ ip }}{{ lan_cidr_suffix }}"
+      vip:
+        ip: "{{ virtual_ip }}"
 
   # Used to provide instructions for installations.
   install:
@@ -151,7 +153,6 @@ cluster:
       key: "{{ certs.etcd.key }}"
     extraArgs:
       listen-metrics-urls: http://127.0.0.1:2381
-
   # # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
 
   # # Decryption secret example (do not use in production!).

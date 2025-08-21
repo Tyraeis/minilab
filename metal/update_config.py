@@ -4,6 +4,7 @@ import os.path
 import subprocess
 import yaml
 from argparse import ArgumentParser, Namespace
+from glob import glob
 from jinja2 import Environment, FileSystemLoader
 from typing import TypedDict, Any
 from urllib.request import Request, urlopen
@@ -51,8 +52,13 @@ def talosctl(*args: str, dry_run: bool, ip: str | None = None):
   if not dry_run:
     subprocess.run(cmd, check=True)
 
-def patch_config(config_file: str, patch_file: str):
-  talosctl('machineconfig', 'patch', config_file, '--patch', f'@{patch_file}', '-o', config_file, dry_run=False)
+def patch_config(config_file: str, *patch_files: str):
+  patch_args = [
+    arg
+    for file in patch_files
+    for arg in ['--patch', f"@{file}"]
+  ]
+  talosctl('machineconfig', 'patch', config_file, *patch_args, '-o', config_file, dry_run=False)
 
 def validate_config(config_file: str):
   talosctl('validate', '--config', config_file, '--mode', 'metal', '--strict', dry_run=False)
@@ -104,13 +110,15 @@ def main():
     image_id = imageFactory.get_image_id(group['hardware'])
     for hostname, ip in group['nodes'].items():
       print(f'\n> {group_name}.{hostname} ({ip})')
+      if not args.dry_run:
+        input()
 
       config = configRenderer.gen_config(group['role'], hostname=hostname, ip=ip, image_factory_id=image_id)
       config_filename = f'rendered/{hostname}.yaml'
       with open(config_filename, 'w') as config_file:
         config_file.write(config)
 
-      patch_config(config_filename, f'hardware/{group['hardware']}/patch.yaml')
+      patch_config(config_filename, *glob(f'hardware/{group['hardware']}/patch/*.yaml'))
       validate_config(config_filename)
 
       if args.apply:

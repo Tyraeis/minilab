@@ -1,6 +1,7 @@
 cluster_name: minilab
-cluster_endpoint: https://k8s.local:6443
+cluster_endpoint: https://192.168.5.7:6443
 lan_cidr_suffix: /22
+virtual_ip: 192.168.5.7
 
 # renovate: image=ghcr.io/siderolabs/installer
 talos_version: "1.10.6"

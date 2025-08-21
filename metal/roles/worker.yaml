@@ -27,16 +27,14 @@ machine:
   network:
     hostname: "{{ hostname }}"
     interfaces:
-    - deviceSelector:
-        physical: true
+    - interface: _ # filled in via hardware patch
+      dhcp: true
       addresses:
       - "{{ ip }}{{ lan_cidr_suffix }}"
 
   # Used to provide instructions for installations.
   install:
     image: factory.talos.dev/metal-installer/{{ image_factory_id }}:v{{ talos_version }}
-    diskSelector:
-      type: nvme
     wipe: false # Indicates if the installation disk should be wiped at installation time.
 
   # Used to configure the machine's container image registry mirrors.
@@ -93,7 +91,7 @@ cluster:
       # endpoint: https://discovery.talos.dev/
       # Etcd specific configuration options.
 
-  # # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
+      # # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
 
-  # # Decryption secret example (do not use in production!).
-  # aescbcEncryptionSecret: z01mye6j16bspJYtTB/5SFX8j7Ph4JXxM2Xuu4vsBPM=
+      # # Decryption secret example (do not use in production!).
+      # aescbcEncryptionSecret: z01mye6j16bspJYtTB/5SFX8j7Ph4JXxM2Xuu4vsBPM=

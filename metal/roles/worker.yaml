@@ -3,12 +3,12 @@ debug: false # Enable verbose logging to the console.
 persist: true
 # Provides machine specific configuration options.
 machine:
-  type: controlplane # Defines the role of the machine within the cluster.
+  type: worker # Defines the role of the machine within the cluster.
   token: "{{ trustdinfo.token }}" # The `token` is used by a machine to join the PKI of the cluster.
   # The root certificate authority of the PKI.
   ca:
     crt: "{{ certs.os.crt }}"
-    key: "{{ certs.os.key }}"
+    key: ""
   # Extra certificate subject alternative names for the machine's certificate.
   certSANs: []
 
@@ -19,46 +19,26 @@ machine:
     disableManifestsDirectory: true # The `disableManifestsDirectory` field configures the kubelet to get static pod manifests from the /etc/kubernetes/manifests directory.
     extraArgs:
       rotate-server-certificates: true # enable certificate rotation (for Metrics Server)
-    extraMounts:
-    - destination: /var/lib/longhorn
-      type: bind
-      source: /var/lib/longhorn
-      options:
-      - bind
-      - rshared
-      - rw
     nodeIP:
       validSubnets:
-      - 192.168.5.0/24
-      - "!{{ virtual_ip }}/32"
+      - "{{ ip }}/32"
 
   # Provides machine specific network configuration options.
   network:
     hostname: "{{ hostname }}"
     interfaces:
-    - interface: eno1
+    - interface: _ # filled in via hardware patch
+      dhcp: true
       addresses:
-      - "{{ inventory_hostname }}/22"
-      vip:
-        ip: "{{ virtual_ip }}"
+      - "{{ ip }}{{ lan_cidr_suffix }}"
 
   # Used to provide instructions for installations.
   install:
-    image: factory.talos.dev/metal-installer/{{ image_factory_response.json.id }}:v{{ talos_version }}
-    diskSelector:
-      type: nvme
+    image: factory.talos.dev/metal-installer/{{ image_factory_id }}:v{{ talos_version }}
     wipe: false # Indicates if the installation disk should be wiped at installation time.
 
   # Used to configure the machine's container image registry mirrors.
   registries: {}
-
-  sysctls:
-    vm.nr_hugepages: "1024"
-
-  kernel:
-    modules:
-    - name: nvme_tcp
-    - name: vfio_pci
 
   # Features describe individual Talos features that can be switched on or off.
   features:
@@ -81,7 +61,7 @@ cluster:
   secret: "{{ cluster.secret }}" # Shared secret of cluster (base64 encoded random 32 bytes).
   # Provides control plane specific configuration options.
   controlPlane:
-    endpoint: https://{{ virtual_ip }}:6443 # Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
+    endpoint: "{{ cluster_endpoint }}" # Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
   clusterName: "{{ cluster_name }}" # Configures the cluster's name.
   # Provides cluster specific network configuration options.
   network:
@@ -94,65 +74,10 @@ cluster:
     - 10.96.0.0/12
 
   token: "{{ secrets.bootstraptoken }}" # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
-  secretboxEncryptionSecret: "{{ secrets.secretboxencryptionsecret }}" # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
   # The base64 encoded root certificate authority used by Kubernetes.
   ca:
     crt: "{{ certs.k8s.crt }}"
-    key: "{{ certs.k8s.key }}"
-  # The base64 encoded aggregator certificate authority used by Kubernetes for front-proxy certificate generation.
-  aggregatorCA:
-    crt: "{{ certs.k8saggregator.crt }}"
-    key: "{{ certs.k8saggregator.key }}"
-  # The base64 encoded private key for service account token generation.
-  serviceAccount:
-    key: "{{ certs.k8sserviceaccount.key }}"
-  # API server specific configuration options.
-  apiServer:
-    image: registry.k8s.io/kube-apiserver:v1.33.3 # The container image used in the API server manifest.
-    # Extra certificate subject alternative names for the API server's certificate.
-    certSANs:
-    - "{{ virtual_ip }}"
-    disablePodSecurityPolicy: true # Disable PodSecurityPolicy in the API server and default manifests.
-    # Configure the API server admission plugins.
-    admissionControl:
-    - name: PodSecurity # Name is the name of the admission controller.
-      # Configuration is an embedded configuration object to be used as the plugin's
-      configuration:
-        apiVersion: pod-security.admission.config.k8s.io/v1alpha1
-        defaults:
-          audit: restricted
-          audit-version: latest
-          enforce: baseline
-          enforce-version: latest
-          warn: restricted
-          warn-version: latest
-        exemptions:
-          namespaces:
-          - kube-system
-          - metallb
-          - longhorn
-          - prometheus
-          - loki
-          runtimeClasses: []
-          usernames: []
-        kind: PodSecurityConfiguration
-    # Configure the API server audit policy.
-    auditPolicy:
-      apiVersion: audit.k8s.io/v1
-      kind: Policy
-      rules:
-      - level: Metadata
-
-  # Controller manager server specific configuration options.
-  controllerManager:
-    image: registry.k8s.io/kube-controller-manager:v1.33.3 # The container image used in the controller manager manifest.
-  # Kube-proxy server-specific configuration options
-  proxy:
-    image: registry.k8s.io/kube-proxy:v1.33.3 # The container image used in the kube-proxy manifest.
-  # Scheduler server specific configuration options.
-  scheduler:
-    image: registry.k8s.io/kube-scheduler:v1.33.3 # The container image used in the scheduler manifest.
-  # Configures cluster member discovery.
+    key: ""
   discovery:
     enabled: true # Enable the cluster membership discovery feature.
     # Configure registries used for cluster member discovery.
@@ -165,18 +90,8 @@ cluster:
       # # External service endpoint.
       # endpoint: https://discovery.talos.dev/
       # Etcd specific configuration options.
-  etcd:
-    # The `ca` is the root certificate authority of the PKI.
-    ca:
-      crt: "{{ certs.etcd.crt }}"
-      key: "{{ certs.etcd.key }}"
-    extraArgs:
-      listen-metrics-urls: http://127.0.0.1:2381
 
-  # # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
+      # # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
 
-  # # Decryption secret example (do not use in production!).
-  # aescbcEncryptionSecret: z01mye6j16bspJYtTB/5SFX8j7Ph4JXxM2Xuu4vsBPM=
-
-  # # Allows running workload on control-plane nodes.
-  allowSchedulingOnControlPlanes: true
+      # # Decryption secret example (do not use in production!).
+      # aescbcEncryptionSecret: z01mye6j16bspJYtTB/5SFX8j7Ph4JXxM2Xuu4vsBPM=

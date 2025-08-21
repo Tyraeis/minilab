@@ -1,12 +1,16 @@
 #!/bin/bash
 
-if [ -f "secrets.yaml" ]; then
-  echo "Error: secrets.yaml already exists"
-  exit 1
+cluster_name=$(yq -r '.cluster_name' vars.yaml)
+cluster_endpoint=$(yq -r '.cluster_endpoint' vars.yaml)
+
+if ! [ -f "secrets.yaml" ]; then
+  talosctl gen secrets -o secrets.yaml
+else
+  echo secrets.yaml already exists
 fi
 
-cluster_name=$(yq -r '.cluster_name' vars.yaml)
-cluster_endpoint=https://$(yq -r '.virtual_ip' vars.yaml):6443
-
-talosctl gen secrets -o secrets.yaml
-talosctl gen config $cluster_name $cluster_endpoint --with-secrets secrets.yaml -t talosconfig
+if ! [ -f "talosconfig" ]; then
+  talosctl gen config $cluster_name $cluster_endpoint --with-secrets secrets.yaml -t talosconfig
+else
+  echo talosconfig already exists
+fi

@@ -1,0 +1,3 @@
+- op: replace
+  path: /machine/network/interfaces/0/interface
+  value: end0

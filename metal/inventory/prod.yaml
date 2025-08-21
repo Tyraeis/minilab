@@ -1,8 +1,15 @@
-nodes:
-  hosts:
-    192.168.5.16:
-      hostname: "node0"
-    192.168.5.17:
-      hostname: "node1"
-    192.168.5.18:
-      hostname: "node2"
+controlplane:
+  role: controlplane
+  hardware: zero3e
+  nodes:
+    cp0: 192.168.5.8
+    cp1: 192.168.5.9
+    cp2: 192.168.5.10
+
+workers:
+  role: worker
+  hardware: m720q
+  nodes:
+    worker0: 192.168.5.16
+    worker1: 192.168.5.17
+    worker2: 192.168.5.18

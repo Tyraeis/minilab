@@ -29,6 +29,8 @@ spec:
         - mountPath: /usr/local/etc/haproxy
           name: config
       hostNetwork: true
+      nodeSelector:
+        node-role.kubernetes.io/control-plane:
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/master

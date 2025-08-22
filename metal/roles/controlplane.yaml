@@ -93,7 +93,9 @@ cluster:
     image: registry.k8s.io/kube-apiserver:v1.33.3 # The container image used in the API server manifest.
     # Extra certificate subject alternative names for the API server's certificate.
     certSANs:
-    - "{{ virtual_ip }}"
+    #{% for certSAN in certSANs %}
+    - "{{ certSAN }}"
+    #{% endfor %}
     disablePodSecurityPolicy: true # Disable PodSecurityPolicy in the API server and default manifests.
     # Configure the API server admission plugins.
     admissionControl:

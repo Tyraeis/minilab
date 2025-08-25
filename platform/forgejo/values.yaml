@@ -38,6 +38,11 @@ forgejo:
         DOMAIN: git.ncraig.dev
         ROOT_URL: https://git.ncraig.dev
         OFFLINE_MODE: true
+      database:
+        DB_TYPE: mysql
+        HOST: mariadb.mariadb.svc.cluster.local:3306
+        NAME: forgejo
+        USER: forgejo
       service:
         REQUIRE_SIGNIN_VIEW: true
         ENABLE_INTERNAL_SIGNIN: false
@@ -50,6 +55,13 @@ forgejo:
       security:
         LOGIN_REMEMBER_DAYS: 365
 
+    additionalConfigFromEnvs:
+    - name: FORGEJO__DATABASE__PASSWD
+      valueFrom:
+        secretKeyRef:
+          name: mariadb-secret
+          key: password
+
     oauth:
     - name: kanidm
       provider: openidConnect
@@ -58,13 +70,3 @@ forgejo:
       scopes: "openid profile email groups"
       groupClaimName: groups
       adminGroup: forgejo_admins@sso.ncraig.dev
-
-  valkey-cluster:
-    enabled: true
-  valkey:
-    enabled: false
-
-  postgresql-ha:
-    enabled: true
-  postgresql:
-    enabled: false

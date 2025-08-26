@@ -1,57 +1,57 @@
 {
-    "Orientation": "Vertical",
-    "Widgets": [
+  "Orientation": "Vertical",
+  "Widgets": [
+    {
+      "Orientation": "Horizontal",
+      "Widgets": [
         {
-            "Orientation": "Horizontal",
-            "Widgets": [
-                {
-                    "Columns": 76,
-                    "Command": "talosctl dashboard -n 192.168.5.8 -e 192.168.5.10",
-                    "Lines": 30,
-                    "SessionRestoreId": 0,
-                    "WorkingDirectory": "/home/noahc"
-                },
-                {
-                    "Columns": 76,
-                    "Command": "talosctl dashboard -n 192.168.5.9 -e 192.168.5.8",
-                    "Lines": 30,
-                    "SessionRestoreId": 0,
-                    "WorkingDirectory": "/home/noahc"
-                },
-                {
-                    "Columns": 76,
-                    "Command": "talosctl dashboard -n 192.168.5.10 -e 192.168.5.9",
-                    "Lines": 30,
-                    "SessionRestoreId": 0,
-                    "WorkingDirectory": "/home/noahc"
-                }
-            ]
+          "Columns": 76,
+          "Command": "talosctl dashboard -n 192.168.5.8 -e 192.168.5.10",
+          "Lines": 30,
+          "SessionRestoreId": 0,
+          "WorkingDirectory": "/home/noahc"
         },
         {
-            "Orientation": "Horizontal",
-            "Widgets": [
-                {
-                    "Columns": 76,
-                    "Command": "talosctl dashboard -n 192.168.5.16 -e 192.168.5.18",
-                    "Lines": 30,
-                    "SessionRestoreId": 0,
-                    "WorkingDirectory": "/home/noahc"
-                },
-                {
-                    "Columns": 76,
-                    "Command": "talosctl dashboard -n 192.168.5.17 -e 192.168.5.16",
-                    "Lines": 30,
-                    "SessionRestoreId": 0,
-                    "WorkingDirectory": "/home/noahc"
-                },
-                {
-                    "Columns": 76,
-                    "Command": "talosctl dashboard -n 192.168.5.18 -e 192.168.5.17",
-                    "Lines": 30,
-                    "SessionRestoreId": 0,
-                    "WorkingDirectory": "/home/noahc"
-                }
-            ]
+          "Columns": 76,
+          "Command": "talosctl dashboard -n 192.168.5.9 -e 192.168.5.8",
+          "Lines": 30,
+          "SessionRestoreId": 0,
+          "WorkingDirectory": "/home/noahc"
+        },
+        {
+          "Columns": 76,
+          "Command": "talosctl dashboard -n 192.168.5.10 -e 192.168.5.9",
+          "Lines": 30,
+          "SessionRestoreId": 0,
+          "WorkingDirectory": "/home/noahc"
         }
-    ]
+      ]
+    },
+    {
+      "Orientation": "Horizontal",
+      "Widgets": [
+        {
+          "Columns": 76,
+          "Command": "talosctl dashboard -n 192.168.5.16 -e 192.168.5.8",
+          "Lines": 30,
+          "SessionRestoreId": 0,
+          "WorkingDirectory": "/home/noahc"
+        },
+        {
+          "Columns": 76,
+          "Command": "talosctl dashboard -n 192.168.5.17 -e 192.168.5.9",
+          "Lines": 30,
+          "SessionRestoreId": 0,
+          "WorkingDirectory": "/home/noahc"
+        },
+        {
+          "Columns": 76,
+          "Command": "talosctl dashboard -n 192.168.5.18 -e 192.168.5.10",
+          "Lines": 30,
+          "SessionRestoreId": 0,
+          "WorkingDirectory": "/home/noahc"
+        }
+      ]
+    }
+  ]
 }

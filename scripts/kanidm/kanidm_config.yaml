@@ -1,0 +1,56 @@
+groups:
+- argocd_users
+- argocd_admins
+- git_users
+- forgejo_admins
+- grafana_users
+- grafana_admins
+- longhorn_admins
+- prometheus_users
+- syncthing_users
+
+oauth_clients:
+  argocd:
+    displayname: ArgoCD
+    origin: https://argocd.ncraig.dev/
+    scope_maps:
+      argocd_users: profile email openid groups
+  forgejo:
+    displayname: Forgejo
+    origin: https://git.ncraig.dev/user/login
+    alt_redirect_urls:
+    - https://git.ncraig.dev/user/oauth2/kanidm/callback
+    scope_maps:
+      git_users: profile email openid groups
+  grafana:
+    displayname: Grafana
+    origin: https://grafana.ncraig.dev/
+    scope_maps:
+      grafana_users: profile email openid groups
+  homepage:
+    displayname: Homepage
+    origin: https://home.ncraig.dev/
+    scope_maps:
+      idm_all_persons: profile email openid
+  longhorn:
+    displayname: Longhorn
+    origin: https://longhorn.ncraig.dev/
+    scope_maps:
+      longhorn_admins: profile email openid
+  prometheus:
+    displayname: Prometheus
+    origin: https://prometheus.ncraig.dev
+    alt_redirect_urls:
+    - https://alertmanager.ncraig.dev
+    scope_maps:
+      prometheus_users: profile email openid
+  syncthing:
+    displayname: Syncthing
+    origin: https://syncthing.ncraig.dev/
+    scope_maps:
+      syncthing_users: profile email openid
+  whoami:
+    displayname: whoami
+    origin: https://whoami.ncraig.dev/
+    scope_maps:
+      idm_all_persons: profile email openid

@@ -1,7 +1,5 @@
 prometheusHost: &prometheus_host prometheus.ncraig.dev
 prometheusCert: &prometheus_cert prometheus-ncraig-dev-cert
-alertmanagerHost: &alertmanager_host alertmanager.ncraig.dev
-alertmanagerCert: &alertmanager_cert alertmanager-ncraig-dev-cert
 
 kube-prometheus-stack:
   crds:
@@ -30,6 +28,7 @@ kube-prometheus-stack:
         - *prometheus_host
   alertmanager:
     alertmanagerSpec:
+      routePrefix: /alertmanager
       containers:
       - name: webhook-relay
         image: nginx:latest
@@ -62,7 +61,7 @@ kube-prometheus-stack:
         - namespace
         group_wait: 30s
         group_interval: 5m
-        repeat_interval: 6h
+        repeat_interval: 12h
         routes:
         - receiver: discord
           matchers:
@@ -74,14 +73,15 @@ kube-prometheus-stack:
     ingress:
       enabled: true
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-prod
         traefik.ingress.kubernetes.io/router.middlewares: prometheus-oauth2-proxy@kubernetescrd
       hosts:
-      - *alertmanager_host
+      - *prometheus_host
+      paths:
+      - /alertmanager
       tls:
-      - secretName: *alertmanager_cert
+      - secretName: *prometheus_cert
         hosts:
-        - *alertmanager_host
+        - *prometheus_host
   kubeEtcd:
     service:
       selector:

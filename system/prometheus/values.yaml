@@ -1,3 +1,8 @@
+prometheusHost: &prometheus_host prometheus.ncraig.dev
+prometheusCert: &prometheus_cert prometheus-ncraig-dev-cert
+alertmanagerHost: &alertmanager_host alertmanager.ncraig.dev
+alertmanagerCert: &alertmanager_cert alertmanager-ncraig-dev-cert
+
 kube-prometheus-stack:
   crds:
     upgradeJob:
@@ -11,6 +16,18 @@ kube-prometheus-stack:
     - name: Loki
       type: loki
       url: http://loki-gateway.loki.svc.cluster.local
+  prometheus:
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        traefik.ingress.kubernetes.io/router.middlewares: prometheus-oauth2-proxy@kubernetescrd
+      hosts:
+      - *prometheus_host
+      tls:
+      - secretName: *prometheus_cert
+        hosts:
+        - *prometheus_host
   alertmanager:
     alertmanagerSpec:
       containers:
@@ -54,7 +71,37 @@ kube-prometheus-stack:
       - name: discord
         discord_configs:
         - webhook_url: http://localhost:1234
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        traefik.ingress.kubernetes.io/router.middlewares: prometheus-oauth2-proxy@kubernetescrd
+      hosts:
+      - *alertmanager_host
+      tls:
+      - secretName: *alertmanager_cert
+        hosts:
+        - *alertmanager_host
   kubeEtcd:
     service:
       selector:
         app: metrics-proxy
+
+oauth2-proxy:
+  config:
+    existingSecret: prometheus-oauth-secret
+    configFile: |
+      provider = "oidc"
+      email_domains = "*"
+      oidc_email_claim = "sub"
+      upstreams = "static://202"
+      reverse_proxy = true
+      oidc_issuer_url = "https://sso.ncraig.dev/oauth2/openid/prometheus"
+      code_challenge_method = "S256"
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+    - *prometheus_host
+    path: /oauth2
+    pathType: Prefix

@@ -12,45 +12,58 @@ groups:
 oauth_clients:
   argocd:
     displayname: ArgoCD
-    origin: https://argocd.ncraig.dev/
+    landing_url: https://argocd.ncraig.dev/
+    redirect_urls:
+    - https://argocd.ncraig.dev/pkce/verify
+    - https://argocd.ncraig.dev/auth/callback
     scope_maps:
       argocd_users: profile email openid groups
   forgejo:
     displayname: Forgejo
-    origin: https://git.ncraig.dev/user/login
-    alt_redirect_urls:
+    landing_url: https://git.ncraig.dev/user/login
+    redirect_urls:
     - https://git.ncraig.dev/user/oauth2/kanidm/callback
     scope_maps:
       git_users: profile email openid groups
   grafana:
     displayname: Grafana
-    origin: https://grafana.ncraig.dev/
+    landing_url: https://grafana.ncraig.dev/
+    redirect_urls:
+    - https://grafana.ncraig.dev/login/generic_oauth
     scope_maps:
       grafana_users: profile email openid groups
   homepage:
     displayname: Homepage
-    origin: https://home.ncraig.dev/
+    landing_url: https://home.ncraig.dev/
+    redirect_urls:
+    - https://home.ncraig.dev/oauth2/callback
     scope_maps:
       idm_all_persons: profile email openid
   longhorn:
     displayname: Longhorn
-    origin: https://longhorn.ncraig.dev/
+    landing_url: https://longhorn.ncraig.dev/
+    redirect_urls:
+    - https://longhorn.ncraig.dev/oauth2/callback
     scope_maps:
       longhorn_admins: profile email openid
   prometheus:
     displayname: Prometheus
-    origin: https://prometheus.ncraig.dev
-    alt_redirect_urls:
-    - https://alertmanager.ncraig.dev
+    landing_url: https://prometheus.ncraig.dev/
+    redirect_urls:
+    - https://prometheus.ncraig.dev/oauth2/callback
     scope_maps:
       prometheus_users: profile email openid
   syncthing:
     displayname: Syncthing
-    origin: https://syncthing.ncraig.dev/
+    landing_url: https://syncthing.ncraig.dev/
+    redirect_urls:
+    - https://syncthing.ncraig.dev/oauth2/callback
     scope_maps:
       syncthing_users: profile email openid
   whoami:
     displayname: whoami
-    origin: https://whoami.ncraig.dev/
+    landing_url: https://whoami.ncraig.dev/
+    redirect_urls:
+    - https://whoami.ncraig.dev/oauth2/callback
     scope_maps:
       idm_all_persons: profile email openid

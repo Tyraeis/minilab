@@ -20,23 +20,23 @@ def kanidm_oauth(*args: str, dry_run: bool, check: bool = True, capture_output: 
 
 ClientYaml = TypedDict('ClientYaml', {
   'displayname': str,
-  'origin': str,
-  'alt_redirect_urls': list[str] | None,
+  'landing_url': str,
+  'redirect_urls': list[str] | None,
   'scope_maps': dict[str, str]
 })
 
 class Client:
   name: str
   displayname: str
-  origin: str
-  alt_redirect_urls: set[str]
+  landing_url: str
+  redirect_urls: set[str]
   scope_maps: dict[str, set[str]]
 
   def __str__(self) -> str:
     return f"""{self.name}:
   displayname: {self.displayname}
-  origin: {self.origin}
-  alt_redirect_urls: {"".join(f"\n    - {url}" for url in self.alt_redirect_urls)}
+  landing_url: {self.landing_url}
+  redirect_urls: {"".join(f"\n    - {url}" for url in self.redirect_urls)}
   scope_maps: {"".join(f"\n    {group}: {" ".join(scopes)}" for group, scopes in self.scope_maps.items())}"""
 
 
@@ -59,8 +59,8 @@ def read_config_yaml() -> KanidmConfig:
     client = Client()
     client.name = client_name
     client.displayname = client_yaml['displayname']
-    client.origin = client_yaml['origin']
-    client.alt_redirect_urls = set(client_yaml.get('alt_redirect_urls', []) or [])
+    client.landing_url = client_yaml['landing_url']
+    client.redirect_urls = set(client_yaml.get('redirect_urls', []) or [])
     client.scope_maps = {
       group_name: set(scope_map.split(' '))
       for group_name, scope_map in client_yaml['scope_maps'].items()
@@ -102,12 +102,8 @@ class KanidmObject:
     client = Client()
     client.name = self.get_one('name')
     client.displayname = self.get_one('displayname')
-    client.origin = self.get_one('oauth2_rs_origin_landing')
-    client.alt_redirect_urls = set(
-      url
-      for url in self.get_many('oauth2_rs_origin')
-      if not url.startswith(client.origin)
-    )
+    client.landing_url = self.get_one('oauth2_rs_origin_landing')
+    client.redirect_urls = set(self.get_many('oauth2_rs_origin'))
     client.scope_maps = {
       group: set(scopes)
       for scope_map in self.get_many('oauth2_rs_scope_map')
@@ -234,8 +230,8 @@ class ClientDiffer(DictDiffer[str, Client]):
     self._dry_run = dry_run
 
   def create(self, key: str, new: Client):
-    kanidm_oauth('create', key, new.displayname, new.origin, dry_run=self._dry_run)
-    for redirect_url in new.alt_redirect_urls:
+    kanidm_oauth('create', key, new.displayname, new.landing_url, dry_run=self._dry_run)
+    for redirect_url in new.redirect_urls:
       kanidm_oauth('add-redirect-url', key, redirect_url, dry_run=self._dry_run)
     for group_name, scope_map in new.scope_maps.items():
       kanidm_oauth('update-scope-map', key, group_name, *scope_map, dry_run=self._dry_run)
@@ -243,9 +239,9 @@ class ClientDiffer(DictDiffer[str, Client]):
   def update(self, key: str, old: Client, new: Client):
     if old.displayname != new.displayname:
       kanidm_oauth('set-displayname', key, new.displayname, dry_run=self._dry_run)
-    if old.origin != new.origin:
-      kanidm_oauth('set-landing-url', key, new.origin, dry_run=self._dry_run)
-    RedirectUrlDiffer(key, self._dry_run).diff(old.alt_redirect_urls, new.alt_redirect_urls)
+    if old.landing_url != new.landing_url:
+      kanidm_oauth('set-landing-url', key, new.landing_url, dry_run=self._dry_run)
+    RedirectUrlDiffer(key, self._dry_run).diff(old.redirect_urls, new.redirect_urls)
     ScopeMapDiffer(key, self._dry_run).diff(old.scope_maps, new.scope_maps)
 
   def delete(self, key: str, old: Client):

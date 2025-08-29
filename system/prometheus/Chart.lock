@@ -1,9 +1,9 @@
 dependencies:
 - name: kube-prometheus-stack
   repository: https://prometheus-community.github.io/helm-charts
-  version: 77.0.2
+  version: 77.1.0
 - name: oauth2-proxy
   repository: https://oauth2-proxy.github.io/manifests/
   version: 8.2.0
-digest: sha256:9d099fd31023545cad76a4fed8424217a40c2b1d5e3c9ba204d88718ca28aef4
-generated: "2025-08-28T17:26:08.868506961-04:00"
+digest: sha256:3d2de000309bef8528b652e274ef88a784986ab7c33f1c89b0b1edfdba9c65d0
+generated: "2025-08-29T14:01:13.954032304Z"

@@ -18,6 +18,9 @@ grafana:
       enabled: true
       searchNamespace: prometheus
   envFromSecret: grafana-secret
+  env:
+    # prevents random admin password generation
+    GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION: true
   grafana.ini:
     server:
       root_url: https://grafana.ncraig.dev

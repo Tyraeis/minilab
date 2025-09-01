@@ -7,4 +7,4 @@ certSANs:
 - kube.cluster.ncraig.dev
 
 # renovate: image=ghcr.io/siderolabs/installer
-talos_version: "1.10.7"
+talos_version: "1.11.0"

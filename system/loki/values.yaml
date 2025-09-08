@@ -15,6 +15,10 @@ loki:
     limits_config:
       allow_structured_metadata: true
       volume_enabled: true
+      retention_period: 336h # 14 days
+    compactor:
+      retention_enabled: true
+      delete_request_store: s3
 
   chunksCache:
     writebackSizeLimit: 10MB

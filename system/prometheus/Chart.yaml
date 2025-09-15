@@ -6,5 +6,5 @@ dependencies:
   version: 77.6.2
   repository: https://prometheus-community.github.io/helm-charts
 - name: oauth2-proxy
-  version: "8.2.0"
+  version: "8.2.1"
   repository: https://oauth2-proxy.github.io/manifests/

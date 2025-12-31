@@ -59,7 +59,7 @@ loki:
       value: 250MiB
     extraEnvFrom:
     - secretRef:
-      name: s3-key
+        name: s3-key
 
   backend:
     replicas: 0

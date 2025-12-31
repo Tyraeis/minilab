@@ -1,0 +1,15 @@
+garage:
+  deployment:
+    replicaCount: 3
+
+  persistence:
+    meta:
+      storageClass: longhorn
+      size: 100Mi
+    data:
+      storageClass: longhorn-strict-local
+      size: 4Gi
+
+  monitoring:
+    metrics:
+      enabled: true

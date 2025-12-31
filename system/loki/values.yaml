@@ -60,6 +60,8 @@ loki:
     extraEnvFrom:
     - secretRef:
         name: s3-key
+    extraArgs:
+    - -config.expand-env=true
 
   backend:
     replicas: 0

@@ -12,7 +12,11 @@ loki:
 
     storage-config:
       aws:
-        s3: &s3-url s3://${S3_KEY_ID}:${S3_KEY_SECRET}@garage.garage.svc.cluster.local:3900
+        endpoint: garage.garage.svc.cluster.local:3900
+        region: garage
+        access_key_id: ${S3_KEY_ID}
+        secret_access_key: ${S3_KEY_SECRET}
+        insecure: true
         s3forcepathstyle: true
         bucketnames: loki-chunks
       tsdb_shipper:
@@ -26,7 +30,11 @@ loki:
         ruler: loki-ruler
         admin: loki-admin
       s3:
-        s3: *s3-url
+        endpoint: garage.garage.svc.cluster.local:3900
+        region: garage
+        access_key_id: ${S3_KEY_ID}
+        secret_access_key: ${S3_KEY_SECRET}
+        insecure: true
         s3forcepathstyle: true
 
     auth_enabled: false

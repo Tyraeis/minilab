@@ -31,7 +31,11 @@ argo-cd:
     ssh:
       extraHosts: |
         git.ncraig.dev ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjlMHfQ55RMQ0/V/c+TnWqQTUIPbQ57r6uOZCt6yiUbiVqASaQTTPktBFXebCsjvGPYgLELIvkZcDTlANYDD3t2aRJW8AdXnddPgoUeytDIkFTBu9azMQ3AIrYma9zpW3CK5sMJqaBassNhLFsEPr08BpMptZ+iqfe365NVDxrOX0u2Bv12RKGHy8/oN3CVjmBFXiPdHkja2A09QCd3xchQouxdK9nQgV8/tfbFoLgeOPzo6QLLFNr4coLyI5N9g6NVKk59YepE+33CVntk4F1BA5ScRMOpx8mUR8Ghf47W/qe+C8cPiQFm8AUtP5X+3K6H4bVsKDuVfjo/PhoJttwBajYYYnbmtypyQVnSS2U573yNJN5Azz/aOSykVFJ442Iyxp+gm4kmvq3eDJXAFaQlk+lwU8JVTGSB05MCMAA22Kai0lEBa9ygiYjHXITKT2nodJLOIOGBOdcyPnLPJmwYAUjGpr6dnj25vzHyWUP4djcyHf1j34HGGXscwZRAg2zzkSkEJzQdWps9oTxqciq2L3V+Q+SRElZVmXEqCeaFlx9IfvsUWJ3ibiPE9Uhi45+3mOzIfWMPGMvl+kia6yytbipXhIHJw9XpmBaeGYz4Qre5r4zZHa/dAnBymJiq4+n2pY0Ga5IjkjaBryApn4nbe8AeFjrjSluBeBJJsKubQ==
-
+    repositories:
+      garage:
+        name: garage
+        url: "git+https://git.deuxfleurs.fr/Deuxfleurs/garage@script/helm?ref=v2.1.0"
+        type: helm
     secret:
       createSecret: false
 

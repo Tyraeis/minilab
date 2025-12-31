@@ -2,6 +2,6 @@ apiVersion: v2
 name: garage
 version: "0.0.0"
 dependencies:
-- name: "garage"
-  repository: "git+https://git.deuxfleurs.fr/Deuxfleurs/garage@script/helm?ref=v2.1.0"
+- name: garage
+  repository: "@garage"
   version: "*"

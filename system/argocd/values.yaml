@@ -52,7 +52,7 @@ argo-cd:
         value: /helm-working-dir
       - name: HELM_DATA_HOME
         value: /helm-working-dir
-      command: ["/bin/sh" "-c"]
+      command: [ "/bin/sh", "-c" ]
       args:
       - helm plugin install https://github.com/aslafy-z/helm-git
 

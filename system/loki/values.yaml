@@ -9,6 +9,26 @@ loki:
         index:
           prefix: loki_index_
           period: 24h
+
+    storage-config:
+      aws:
+        s3: &s3-url s3://${S3_KEY_ID}:${S3_KEY_SECRET}@garage.garage.svc.cluster.local:3900
+        s3forcepathstyle: true
+        bucketnames: loki-chunks
+      tsdb_shipper:
+        active_index_directory: /loki/index
+        cache_location: /loki/index_cache
+        cache_ttl: 24h
+    storage:
+      type: s3
+      bucketNames:
+        chunks: loki-chunks
+        ruler: loki-ruler
+        admin: loki-admin
+      s3:
+        s3: *s3-url
+        s3forcepathstyle: true
+
     auth_enabled: false
     pattern_ingester:
       enabled: true
@@ -24,9 +44,6 @@ loki:
     writebackSizeLimit: 10MB
     allocatedMemory: 1024
 
-  minio:
-    enabled: true
-
   deploymentMode: SingleBinary
   singleBinary:
     replicas: 3
@@ -40,6 +57,9 @@ loki:
     extraEnv:
     - name: GOMEMLIMIT
       value: 250MiB
+    extraEnvFrom:
+    - secretRef:
+      name: s3-key
 
   backend:
     replicas: 0

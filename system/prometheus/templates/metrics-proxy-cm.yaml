@@ -13,36 +13,36 @@ data:
       timeout server 5000ms
       default-server maxconn 10
 
-    frontend kube-controller-manager
+    frontend kube-controller-manager-fe
       bind ${NODE_IP}:10257
       mode tcp
-      default_backend kube-controller-manager
+      default_backend kube-controller-manager-be
 
-    backend kube-controller-manager
+    backend kube-controller-manager-be
       mode tcp
       server kube-controller-manager 127.0.0.1:10257
 
-    frontend kube-scheduler
+    frontend kube-scheduler-fe
       bind ${NODE_IP}:10259
       mode tcp
-      default_backend kube-scheduler
+      default_backend kube-scheduler-be
 
-    backend kube-scheduler
+    backend kube-scheduler-be
       mode tcp
       server kube-scheduler 127.0.0.1:10259
 
-    frontend kube-proxy
+    frontend kube-proxy-fe
       bind ${NODE_IP}:10249
       http-request deny if !{ path /metrics }
-      default_backend kube-proxy
+      default_backend kube-proxy-be
 
-    backend kube-proxy
+    backend kube-proxy-be
       server kube-proxy 127.0.0.1:10249
 
-    frontend etcd
+    frontend etcd-fe
       bind ${NODE_IP}:2381
       http-request deny if !{ path /metrics }
-      default_backend etcd
+      default_backend etcd-be
 
-    backend etcd
+    backend etcd-be
       server etcd 127.0.0.1:2381

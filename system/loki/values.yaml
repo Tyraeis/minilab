@@ -1,3 +1,10 @@
+_common_pod_settings: &common_pod_settings
+  extraEnvFrom:
+  - secretRef:
+      name: s3-key
+  extraArgs:
+  - -config.expand-env=true
+
 loki:
   loki:
     schemaConfig:
@@ -52,30 +59,22 @@ loki:
     writebackSizeLimit: 10MB
     allocatedMemory: 1024
 
-  deploymentMode: SingleBinary
+  deploymentMode: SimpleScalable
+
   singleBinary:
-    replicas: 3
-    resources:
-      requests:
-        cpu: 500m
-        memory: 256Mi
-      limits:
-        cpu: 1000m
-        memory: 384Mi
-    extraEnv:
-    - name: GOMEMLIMIT
-      value: 250MiB
-    extraEnvFrom:
-    - secretRef:
-        name: s3-key
-    extraArgs:
-    - -config.expand-env=true
+    replicas: 0
 
   backend:
-    replicas: 0
+    <<: *common_pod_settings
+    replicas: 2
   read:
-    replicas: 0
+    <<: *common_pod_settings
+    replicas: 2
   write:
+    <<: *common_pod_settings
+    replicas: 3
+
+  distributor:
     replicas: 0
   ingester:
     replicas: 0
@@ -85,15 +84,9 @@ loki:
     replicas: 0
   queryScheduler:
     replicas: 0
-  distributor:
-    replicas: 0
-  compactor:
-    replicas: 0
   indexGateway:
     replicas: 0
-  bloomCompactor:
-    replicas: 0
-  bloomGateway:
+  compactor:
     replicas: 0
 
 promtail:

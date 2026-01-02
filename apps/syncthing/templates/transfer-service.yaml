@@ -16,5 +16,6 @@ spec:
     - port: 21027
       protocol: UDP
       name: local-discovery
+  externalTrafficPolicy: Local
   selector:
     {{- include "syncthing.selectorLabels" . | nindent 4 }}

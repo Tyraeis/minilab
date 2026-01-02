@@ -1,3 +1,7 @@
-- op: replace
-  path: /machine/network/interfaces/0/interface
-  value: eno1
+machine:
+  network:
+    interfaces:
+    - interface: eno1
+      dhcp: true
+      addresses:
+      - "{{ ip }}{{ lan_cidr_suffix }}"

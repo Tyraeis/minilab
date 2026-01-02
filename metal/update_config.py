@@ -26,25 +26,49 @@ class ImageFactory:
 
 
 class ConfigRenderer:
-  _env = Environment(loader=FileSystemLoader('roles'))
-  _globals: dict[str, Any] = {}
+  _env = Environment(loader=FileSystemLoader('.'))
+  _vars: dict[str, Any] = {}
 
   def __init__(self) -> None:
-    with open(f'secrets.yaml') as secrets_file:
-      self._globals.update(yaml.safe_load(secrets_file))
     with open(f'vars.yaml') as vars_file:
-      self._globals.update(yaml.safe_load(vars_file))
+      self._vars = yaml.safe_load(vars_file)
 
-  def gen_config(self, role: str, **extra_vars: Any) -> str:
-    template = self._env.get_template(f'{role}.yaml')
-    return template.render(**self._globals, **extra_vars)
+  def _render_patch(self, name: str, path: str, **extra_vars: Any) -> str:
+    template = self._env.get_template(path)
+    outfile = f'rendered/{name}_{path.replace("/", "_")}.yaml'
+    with open(outfile, 'w') as f:
+      f.write(template.render(**self._vars, **extra_vars))
+    return outfile
+
+  def gen_config(self, name: str, role: str, hardware: str, **extra_vars: Any) -> str:
+    patch_args: list[str] = [
+      arg
+      for path in [
+        *glob(f'roles/common/*.yaml'),
+        *glob(f'roles/{role}/*.yaml'),
+        *glob(f'hardware/{hardware}/patch/*.yaml')
+      ]
+      for arg in ['--config-patch', '@' + self._render_patch(name, path, **extra_vars)]
+    ]
+
+    outfile = f'rendered/{name}.yaml'
+    talosctl(
+      'gen', 'config', self.get_global('cluster_name'), self.get_global('cluster_endpoint'),
+      '--with-secrets', 'secrets.yaml',
+      '--kubernetes-version', self.get_global('kubernetes_version'),
+      '--talos-version', self.get_global('talos_version'),
+      *patch_args,
+      '--output-types', role,
+      '--output', outfile,
+      '--force', dry_run=False)
+    return outfile
 
   def get_global(self, var: str) -> Any:
-    return self._globals[var]
+    return self._vars[var]
 
 
 def talosctl(*args: str, dry_run: bool, ip: str | None = None):
-  cmd = ['talosctl', '--talosconfig', './talosconfig', *args]
+  cmd = ['talosctl', *args]
   if ip != None:
     cmd.extend(['--nodes', ip])
 
@@ -52,22 +76,15 @@ def talosctl(*args: str, dry_run: bool, ip: str | None = None):
   if not dry_run:
     subprocess.run(cmd, check=True)
 
-def patch_config(config_file: str, *patch_files: str):
-  patch_args = [
-    arg
-    for file in patch_files
-    for arg in ['--patch', f"@{file}"]
-  ]
-  talosctl('machineconfig', 'patch', config_file, *patch_args, '-o', config_file, dry_run=False)
-
 def validate_config(config_file: str):
   talosctl('validate', '--config', config_file, '--mode', 'metal', '--strict', dry_run=False)
 
 def apply_config(ip: str, config_file: str, *, dry_run: bool):
-  talosctl('apply-config', '--file', config_file, ip=ip, dry_run=dry_run)
+  dry_run_arg = ['--dry-run'] if dry_run else []
+  talosctl('apply-config', '--talosconfig=./talosconfig', '--file', config_file, *dry_run_arg, ip=ip, dry_run=False)
 
 def upgrade(ip: str, image_id: str, talos_version: str, *, dry_run: bool):
-  talosctl('upgrade', '--image', f'factory.talos.dev/metal-installer/{image_id}:v{talos_version}', ip=ip, dry_run=dry_run)
+  talosctl('upgrade', '--talosconfig=./talosconfig', '--image', f'factory.talos.dev/metal-installer/{image_id}:v{talos_version}', ip=ip, dry_run=dry_run)
 
 
 type Inventory = dict[str, Group]
@@ -113,12 +130,9 @@ def main():
       if not args.dry_run:
         input()
 
-      config = configRenderer.gen_config(group['role'], hostname=hostname, ip=ip, image_factory_id=image_id)
-      config_filename = f'rendered/{hostname}.yaml'
-      with open(config_filename, 'w') as config_file:
-        config_file.write(config)
+      config_filename = configRenderer.gen_config(hostname, group['role'], group['hardware'],
+                                                  hostname=hostname, ip=ip, image_factory_id=image_id)
 
-      patch_config(config_filename, *glob(f'hardware/{group['hardware']}/patch/*.yaml'))
       validate_config(config_filename)
 
       if args.apply:

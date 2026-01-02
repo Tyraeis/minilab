@@ -1,0 +1,16 @@
+machine:
+  features:
+    rbac: true # Enable role-based access control (RBAC).
+    apidCheckExtKeyUsage: true # Enable checks for extended key usage of client certificates in apid.
+
+  kubelet:
+    extraArgs:
+      rotate-server-certificates: true # enable certificate rotation (for Metrics Server)
+    nodeIP:
+      validSubnets:
+      - "{{ ip }}/32"
+
+  install:
+    disk: { $patch: delete }
+    image: factory.talos.dev/metal-installer/{{ image_factory_id }}:v{{ talos_version }}
+    wipe: false # Indicates if the installation disk should be wiped at installation time.

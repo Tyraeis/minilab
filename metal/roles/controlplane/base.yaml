@@ -1,0 +1,32 @@
+cluster:
+  apiServer:
+    certSANs:
+    #{% for certSAN in certSANs %}
+    - "{{ certSAN }}"
+    #{% endfor %}
+    disablePodSecurityPolicy: true
+    admissionControl:
+    - name: PodSecurity # Name is the name of the admission controller.
+      # Configuration is an embedded configuration object to be used as the plugin's
+      configuration:
+        apiVersion: pod-security.admission.config.k8s.io/v1alpha1
+        defaults:
+          audit: restricted
+          audit-version: latest
+          enforce: baseline
+          enforce-version: latest
+          warn: restricted
+          warn-version: latest
+        exemptions:
+          namespaces:
+          - metallb
+          - longhorn
+          - prometheus
+          - loki
+          runtimeClasses: []
+          usernames: []
+        kind: PodSecurityConfiguration
+
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://127.0.0.1:2381

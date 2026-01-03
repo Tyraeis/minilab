@@ -23,6 +23,7 @@ cluster:
           - longhorn
           - prometheus
           - loki
+          - node-feature-discovery
           runtimeClasses: []
           usernames: []
         kind: PodSecurityConfiguration

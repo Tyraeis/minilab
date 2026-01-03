@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "jellyfin.fullname" . }}
   labels:
@@ -69,15 +69,30 @@ spec:
           capabilities:
             drop: [ALL]
       volumes:
-      - name: config
-        persistentVolumeClaim:
-          claimName: jellyfin-config
-      - name: cache
-        persistentVolumeClaim:
-          claimName: jellyfin-cache
       - name: media
         nfs:
           server: 192.168.5.5
           path: /media
       - name: tmp
         emptyDir:
+  volumeClaimTemplates:
+  - metadata:
+      name: cache
+      labels:
+        {{- include "jellyfin.labels" . | nindent 8 }}
+    spec:
+      storageClassName: longhorn
+      accessModes: [ ReadWriteOnce ]
+      resources:
+        requests:
+          storage: 4Gi
+  - metadata:
+      name: config
+      labels:
+        {{- include "jellyfin.labels" . | nindent 8 }}
+    spec:
+      storageClassName: longhorn
+      accessModes: [ ReadWriteOnce ]
+      resources:
+        requests:
+          storage: 4Gi

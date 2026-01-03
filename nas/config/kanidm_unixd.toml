@@ -1,0 +1,27 @@
+# Kanidm Unixd minimal Service Configuration - /etc/kanidm/unixd
+# For a full example and documentation, see /usr/share/kanidm-unixd/unixd
+# or `example/unixd` in the source repository
+
+version = '2'
+
+# Steps to enable the Kanidm auth provider:
+# 1. Uncomment the `[kanidm]` line below to enable the provider.
+# 2. Set the `pam_allowed_login_groups` option to one or more valid posix groups.
+# 3. Also update /etc/kanidm/config and set the `idm_uri` option.
+
+default_shell = "/bin/sh"
+home_prefix = "/store/home/"
+
+[kanidm]
+pam_allowed_login_groups = ["nas_users"]
+# home_attr = "uuid"
+# home_alias = "spn"
+# use_etc_skel = false
+
+[[kanidm.map_group]]
+local = "openmediavault-admin"
+with = "nas_admins"
+
+[[kanidm.map_group]]
+local = "users"
+with = "nas_users"

@@ -40,13 +40,26 @@ class Client:
   scope_maps: {"".join(f"\n    {group}: {" ".join(scopes)}" for group, scopes in self.scope_maps.items())}"""
 
 
+GroupYaml = TypedDict('GroupYaml', {
+  'name': str,
+  'posix': bool | None
+})
+
+class Group:
+  name: str
+  posix: bool
+
+  def __str__(self) -> str:
+    return self.name + (" (posix)" if self.posix else "")
+
+
 KanidmConfigYaml = TypedDict('KanidmConfigYaml', {
-  'groups': list[str],
+  'groups': list[GroupYaml],
   'oauth_clients': dict[str, ClientYaml]
 })
 
 class KanidmConfig(NamedTuple):
-  groups: set[str]
+  groups: dict[str, Group]
   clients: dict[str, Client]
 
 
@@ -67,7 +80,12 @@ def read_config_yaml() -> KanidmConfig:
     }
     clients[client_name] = client
 
-  groups = set(config_yaml['groups'])
+  groups: dict[str, Group] = {}
+  for group_yaml in config_yaml['groups']:
+    group = Group()
+    group.name = group_yaml['name']
+    group.posix = 'posix' in group_yaml and group_yaml['posix'] == True
+    groups[group.name] = group
 
   return KanidmConfig(clients=clients, groups=groups)
 
@@ -98,6 +116,9 @@ class KanidmObject:
   def get_many(self, key:str) -> list[str]:
     return self.fields[key] if key in self.fields else []
 
+  def has_key(self, key: str) -> bool:
+    return key in self.fields and len(self.fields[key]) > 0
+
   def as_client(self) -> Client:
     client = Client()
     client.name = self.get_one('name')
@@ -111,8 +132,11 @@ class KanidmObject:
     }
     return client
 
-  def as_group(self) -> str:
-    return self.get_one('name')
+  def as_group(self) -> Group:
+    group = Group()
+    group.name = self.get_one('name')
+    group.posix = self.has_key('gidnumber')
+    return group
 
 
 def list_existing_clients() -> dict[str, Client]:
@@ -124,12 +148,13 @@ def list_existing_clients() -> dict[str, Client]:
   return { client.name: client for client in clients }
 
 
-def list_existing_groups() -> set[str]:
-  return set(
+def list_existing_groups() -> dict[str, Group]:
+  groups = (
     KanidmObject(group_str).as_group()
     for group_str in kanidm('group', 'list', dry_run=False, capture_output=True).decode().split('---')
     if len(group_str.strip()) > 0
   )
+  return { group.name: group for group in groups }
 
 
 T = TypeVar('T')
@@ -176,17 +201,23 @@ class DictDiffer[K, V](ABC):
     pass
 
 
-class GroupDiffer(SetDiffer[str]):
+class GroupDiffer(DictDiffer[str, Group]):
   _dry_run: bool
 
   def __init__(self, dry_run: bool):
     self._dry_run = dry_run
 
-  def create(self, new: str):
-    kanidm('group', 'create', new, dry_run=self._dry_run)
+  def create(self, key: str, new: Group):
+    kanidm('group', 'create', key, dry_run=self._dry_run)
+    if new.posix:
+      kanidm('group', 'posix', 'set', key, dry_run=self._dry_run)
 
-  def delete(self, old: str):
-    if not old.startswith('idm_'):
+  def update(self, key: str, old: Group, new: Group):
+    if new.posix and not old.posix:
+      kanidm('group', 'posix', 'set', key, dry_run=self._dry_run)
+
+  def delete(self, key: str, old: Group):
+    if not key.startswith('idm_'):
       print(f'Untracked group: {old}')
 
 

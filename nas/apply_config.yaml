@@ -1,0 +1,44 @@
+- name: Configure kanidm unixd
+  hosts: nas
+  become: true
+  tasks:
+  - name: Install Kanidm PPA GPG Key
+    ansible.builtin.copy:
+      src: ./config/kanidm_ppa.asc
+      dest: /etc/apt/trusted.gpg.d/kanidm_ppa.asc
+  - name: Install Kanidm PPA
+    ansible.builtin.template:
+      src: ./config/kanidm_ppa.list
+      dest: /etc/apt/sources.list.d/kanidm_ppa.list
+
+  - name: Install kanidm-unixd
+    ansible.builtin.apt:
+      name: kanidm-unixd
+      state: present
+      update_cache: true
+
+  - name: Write /etc/kanidm/config
+    ansible.builtin.copy:
+      src: ./config/kanidm_config.toml
+      dest: /etc/kanidm/config
+  - name: Write /etc/kanidm/unixd
+    ansible.builtin.copy:
+      src: ./config/kanidm_unixd.toml
+      dest: /etc/kanidm/unixd
+
+  - name: Enable kanidm-unixd systemd service
+    ansible.builtin.systemd_service:
+      name: kanidm-unixd
+      state: restarted
+      enabled: true
+
+  - name: Add kanidm to nsswitch.conf passwd
+    ansible.builtin.lineinfile:
+      path: /etc/nsswitch.conf
+      regexp: "^passwd:"
+      line: "passwd: kanidm files systemd"
+  - name: Add kanidm to nsswitch.conf group
+    ansible.builtin.lineinfile:
+      path: /etc/nsswitch.conf
+      regexp: "^group:"
+      line: "group: kanidm files systemd"

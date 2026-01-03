@@ -1,13 +1,17 @@
 groups:
-- argocd_users
-- argocd_admins
-- git_users
-- forgejo_admins
-- grafana_users
-- grafana_admins
-- longhorn_admins
-- prometheus_users
-- syncthing_users
+- name: argocd_users
+- name: argocd_admins
+- name: git_users
+- name: forgejo_admins
+- name: grafana_users
+- name: grafana_admins
+- name: longhorn_admins
+- name: prometheus_users
+- name: syncthing_users
+- name: nas_users
+  posix: true
+- name: nas_admins
+  posix: true
 
 oauth_clients:
   argocd:

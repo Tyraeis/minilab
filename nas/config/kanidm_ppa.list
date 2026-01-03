@@ -1,0 +1,1 @@
+deb [arch=amd64,arm64 signed-by=/etc/apt/trusted.gpg.d/kanidm_ppa.asc] https://kanidm.github.io/kanidm_ppa {{ ansible_facts['distribution_release'] }} stable

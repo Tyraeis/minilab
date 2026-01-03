@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "jellyfin.fullname" . }}
+  labels:
+    {{- include "jellyfin.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "jellyfin.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "jellyfin.labels" . | nindent 8 }}
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "jellyfin/jellyfin:{{ .Chart.AppVersion }}"
+        env:
+        - name: JELLYFIN_PublishedServerUrl=https://jellyfin.ncraig.dev
+        ports:
+        - name: http
+          containerPort: 8096
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: cache
+          mountPath: /cache
+        - name: media
+          mountPath: /media
+          readOnly: true
+        - name: tmp
+          mountPath: /tmp
+        resources:
+          requests:
+            gpu.intel.com/i915: "1"
+          limits:
+            gpu.intel.com/i915: "1"
+        startupProbe:
+          httpGet:
+            port: http
+            path: /health
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            port: http
+            path: /health
+          initialDelaySeconds: 0
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            port: http
+            path: /health
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          seccompProfile:
+            type: RuntimeDefault
+          capabilities:
+            drop: [ALL]
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: jellyfin-config
+      - name: cache
+        persistentVolumeClaim:
+          claimName: jellyfin-cache
+      - name: media
+        nfs:
+          server: 192.168.5.5
+          path: /media
+      - name: tmp
+        emptyDir:

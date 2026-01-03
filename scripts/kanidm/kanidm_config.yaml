@@ -5,6 +5,7 @@ groups:
 - name: forgejo_admins
 - name: grafana_users
 - name: grafana_admins
+- name: jellyfin_users
 - name: longhorn_admins
 - name: prometheus_users
 - name: syncthing_users
@@ -43,6 +44,13 @@ oauth_clients:
     - https://home.ncraig.dev/oauth2/callback
     scope_maps:
       idm_all_persons: profile email openid
+  jellyfin:
+    displayname: Jellyfin
+    landing_url: https://jellyfin.ncraig.dev/
+    redirect_urls:
+    - https://jellyfin.ncraig.dev/oauth2/callback
+    scope_maps:
+      jellyfin_users: profile email openid
   longhorn:
     displayname: Longhorn
     landing_url: https://longhorn.ncraig.dev/

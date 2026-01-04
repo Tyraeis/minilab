@@ -70,7 +70,7 @@ class ConfigRenderer:
 def talosctl(*args: str, dry_run: bool, ip: str | None = None):
   cmd = ['talosctl', *args]
   if ip != None:
-    cmd.extend(['--nodes', ip])
+    cmd.extend(['--talosconfig=./talosconfig', '--nodes', ip])
 
   print('$ ' + ' '.join(cmd))
   if not dry_run:
@@ -81,10 +81,13 @@ def validate_config(config_file: str):
 
 def apply_config(ip: str, config_file: str, *, dry_run: bool):
   dry_run_arg = ['--dry-run'] if dry_run else []
-  talosctl('apply-config', '--talosconfig=./talosconfig', '--file', config_file, *dry_run_arg, ip=ip, dry_run=False)
+  talosctl('apply-config', '--file', config_file, *dry_run_arg, ip=ip, dry_run=False)
 
 def upgrade(ip: str, image_id: str, talos_version: str, *, dry_run: bool):
-  talosctl('upgrade', '--talosconfig=./talosconfig', '--image', f'factory.talos.dev/metal-installer/{image_id}:v{talos_version}', ip=ip, dry_run=dry_run)
+  talosctl('upgrade', '--image', f'factory.talos.dev/metal-installer/{image_id}:v{talos_version}', ip=ip, dry_run=dry_run)
+
+def reboot(ip: str, *, dry_run: bool):
+  talosctl('reboot', ip=ip, dry_run=dry_run)
 
 
 type Inventory = dict[str, Group]
@@ -99,6 +102,8 @@ def parse_args() -> Namespace:
   parser = ArgumentParser()
   parser.add_argument('-a', '--apply', action='store_true', help='apply talos config using talosctl apply-config')
   parser.add_argument('-u', '--upgrade', action='store_true', help='upgrade talos system using talosctl upgrade')
+  parser.add_argument('-b', '--reboot', action='store_true', help='manually reboot each node using talosctl reboot')
+  parser.add_argument('-P', '--nopause', action='store_true', help='do not wait for input before operation on each node')
   parser.add_argument('--group', action='store', default=None, help='only operate on nodes in the specified group')
   parser.add_argument('--role', action='store', default=None, help='only operate on nodes with the specified role')
   parser.add_argument('--hardware', action='store', default=None, help='only operate on nodes with the specified hardware')
@@ -127,19 +132,20 @@ def main():
     image_id = imageFactory.get_image_id(group['hardware'])
     for hostname, ip in group['nodes'].items():
       print(f'\n> {group_name}.{hostname} ({ip})')
-      if not args.dry_run:
+      if not args.dry_run and not args.nopause:
         input()
 
-      config_filename = configRenderer.gen_config(hostname, group['role'], group['hardware'],
-                                                  hostname=hostname, ip=ip, image_factory_id=image_id)
-
-      validate_config(config_filename)
-
       if args.apply:
+        config_filename = configRenderer.gen_config(hostname, group['role'], group['hardware'],
+                                                    hostname=hostname, ip=ip, image_factory_id=image_id)
+        validate_config(config_filename)
         apply_config(ip, config_filename, dry_run=args.dry_run)
 
       if args.upgrade:
         upgrade(ip, image_id, configRenderer.get_global('talos_version'), dry_run=args.dry_run)
+
+      if args.reboot:
+        reboot(ip, dry_run=args.dry_run)
 
 
 if __name__ == '__main__':

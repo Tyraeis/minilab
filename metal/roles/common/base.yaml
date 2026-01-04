@@ -2,7 +2,8 @@ machine:
   features:
     rbac: true # Enable role-based access control (RBAC).
     apidCheckExtKeyUsage: true # Enable checks for extended key usage of client certificates in apid.
-    forwardKubeDNSToHost: false # Must be off to avoid issues with Cilium + CoreDNS
+    hostDNS:
+      forwardKubeDNSToHost: false # Must be off to avoid issues with Cilium + CoreDNS
 
   kubelet:
     extraArgs:

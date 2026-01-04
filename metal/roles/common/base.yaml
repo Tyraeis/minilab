@@ -2,6 +2,7 @@ machine:
   features:
     rbac: true # Enable role-based access control (RBAC).
     apidCheckExtKeyUsage: true # Enable checks for extended key usage of client certificates in apid.
+    forwardKubeDNSToHost: false # Must be off to avoid issues with Cilium + CoreDNS
 
   kubelet:
     extraArgs:
@@ -14,3 +15,10 @@ machine:
     disk: { $patch: delete }
     image: factory.talos.dev/metal-installer/{{ image_factory_id }}:v{{ talos_version }}
     wipe: false # Indicates if the installation disk should be wiped at installation time.
+
+cluster:
+  network:
+    cni:
+      name: none
+  proxy:
+    disabled: true

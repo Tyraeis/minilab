@@ -1,7 +1,0 @@
-machine:
-  network:
-    interfaces:
-    - interface: eno1
-      dhcp: true
-      addresses:
-      - "{{ ip }}{{ lan_cidr_suffix }}"

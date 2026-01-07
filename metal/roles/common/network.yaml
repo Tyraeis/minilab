@@ -1,0 +1,19 @@
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: ethernet
+selector:
+  match: true
+---
+apiVersion: v1alpha1
+kind: LinkConfig
+name: ethernet
+up: true
+addresses:
+- address: "{{ ip }}{{ lan_cidr_suffix }}"
+routes:
+- gateway: 192.168.1.1
+---
+apiVersion: v1alpha1
+kind: ResolverConfig
+nameservers:
+- address: 192.168.1.1

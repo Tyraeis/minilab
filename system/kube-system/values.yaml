@@ -1,6 +1,7 @@
 cilium:
-  routingMode: native
-  ipv4NativeRoutingCIDR: "192.168.0.0/20"
+  # routingMode: native
+  # ipv4NativeRoutingCIDR: "192.168.0.0/20"
+  # autoDirectNodeRoutes: true # since all nodes are connected via ethernet switch
 
   bpf:
     masquerade: true

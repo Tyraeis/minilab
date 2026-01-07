@@ -100,14 +100,15 @@ def read_inventory(name: str) -> Inventory:
 
 def parse_args() -> Namespace:
   parser = ArgumentParser()
-  parser.add_argument('-a', '--apply', action='store_true', help='apply talos config using talosctl apply-config')
+  parser.add_argument('-a', '--apply', action='store_true', help='apply talos config using talosctl apply-config (implies --genconfig)')
+  parser.add_argument('-c', '--genconfig', action='store_true', help='generate talos config files')
   parser.add_argument('-u', '--upgrade', action='store_true', help='upgrade talos system using talosctl upgrade')
   parser.add_argument('-b', '--reboot', action='store_true', help='manually reboot each node using talosctl reboot')
   parser.add_argument('-P', '--nopause', action='store_true', help='do not wait for input before operation on each node')
   parser.add_argument('--group', action='store', default=None, help='only operate on nodes in the specified group')
   parser.add_argument('--role', action='store', default=None, help='only operate on nodes with the specified role')
   parser.add_argument('--hardware', action='store', default=None, help='only operate on nodes with the specified hardware')
-  parser.add_argument('--dry-run', action='store_true')
+  parser.add_argument('-d', '--dry-run', action='store_true')
   return parser.parse_args()
 
 
@@ -135,11 +136,12 @@ def main():
       if not args.dry_run and not args.nopause:
         input()
 
-      if args.apply:
+      if args.apply or args.genconfig:
         config_filename = configRenderer.gen_config(hostname, group['role'], group['hardware'],
                                                     hostname=hostname, ip=ip, image_factory_id=image_id)
         validate_config(config_filename)
-        apply_config(ip, config_filename, dry_run=args.dry_run)
+        if args.apply:
+          apply_config(ip, config_filename, dry_run=args.dry_run)
 
       if args.upgrade:
         upgrade(ip, image_id, configRenderer.get_global('talos_version'), dry_run=args.dry_run)

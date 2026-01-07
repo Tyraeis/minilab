@@ -1,6 +1,6 @@
 cluster_name: minilab
 cluster_endpoint: https://kube.cluster.ncraig.dev:6443
-lan_cidr_suffix: /22
+lan_cidr_suffix: /20
 certSANs:
 - kube.cluster.ncraig.dev
 

@@ -5,17 +5,18 @@ cilium:
 
   bpf:
     masquerade: true
-    datapathMode: netkit
-    distributedLRU:
-      enabled: true
-    mapDynamicSizeRatio: 0.08
+    # datapathMode: netkit
+    # distributedLRU:
+    #   enabled: true
+    # mapDynamicSizeRatio: 0.08
 
   ipv4:
     enabled: true
-  enableIPv4BIGTCP: false
+  ipv6:
+    enabled: false
 
   kubeProxyReplacement: true
-  bpfClockProbe: true
+  # bpfClockProbe: true
 
   k8sServiceHost: localhost
   k8sServicePort: 7445

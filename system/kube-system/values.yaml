@@ -5,6 +5,7 @@ cilium:
 
   bpf:
     masquerade: true
+    tproxy: true
     # datapathMode: netkit
     # distributedLRU:
     #   enabled: true

@@ -6,6 +6,11 @@ kube-prometheus-stack:
     upgradeJob:
       enabled: true
       forceConflicts: true
+  defaultRules:
+    rules:
+      kubeProxy: false
+  kubeProxy:
+    enabled: false
   grafana:
     enabled: false
     forceDeployDatasources: true

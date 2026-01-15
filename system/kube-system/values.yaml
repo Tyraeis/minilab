@@ -5,7 +5,6 @@ cilium:
 
   bpf:
     masquerade: true
-    hostLegacyRouting: true
     datapathMode: netkit
     distributedLRU:
       enabled: true

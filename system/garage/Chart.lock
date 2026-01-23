@@ -1,6 +1,6 @@
 dependencies:
 - name: garage
-  repository: git+https://git.deuxfleurs.fr/Deuxfleurs/garage@script/helm?ref=v2.1.0
+  repository: git+https://git.deuxfleurs.fr/Deuxfleurs/garage@script/helm?ref=ba1f30d3930d540cf75b3d384589966bf5f7e34a
   version: 0.9.1
-digest: sha256:35f8bf2fb982b153e6414b9a9c9ee78ebe3feb7b771c4f82484d557e5d7d6528
-generated: "2025-12-30T21:36:14.506053735-05:00"
+digest: sha256:a76426c4fc8aa736bd80856561a6af2e915f441d5de9573475b360534f247636
+generated: "2026-01-23T00:26:14.162008261-05:00"

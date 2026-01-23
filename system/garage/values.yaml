@@ -14,4 +14,5 @@ garage:
     metrics:
       enabled: true
 
-  existingRpcSecret: garage-rpc-secret
+  garage:
+    existingRpcSecret: garage-rpc-secret

@@ -34,7 +34,7 @@ argo-cd:
     repositories:
       garage:
         name: garage
-        url: "git+https://git.deuxfleurs.fr/Deuxfleurs/garage@script/helm?ref=v2.1.0"
+        url: "git+https://git.deuxfleurs.fr/Deuxfleurs/garage@script/helm?ref=ba1f30d3930d540cf75b3d384589966bf5f7e34a"
         type: helm
     secret:
       createSecret: false

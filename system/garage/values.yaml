@@ -13,3 +13,5 @@ garage:
   monitoring:
     metrics:
       enabled: true
+
+  existingRpcSecret: garage-rpc-secret

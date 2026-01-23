@@ -5,10 +5,10 @@ garage:
   persistence:
     meta:
       storageClass: longhorn
-      size: 100Mi
+      size: 1Gi
     data:
       storageClass: longhorn-strict-local
-      size: 4Gi
+      size: 12Gi
 
   monitoring:
     metrics:

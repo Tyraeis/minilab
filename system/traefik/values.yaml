@@ -16,3 +16,7 @@ traefik:
       enabled: true
       entryPoints:
       - traefik
+
+  logs:
+    access:
+      enabled: true

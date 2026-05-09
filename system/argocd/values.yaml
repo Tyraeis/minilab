@@ -45,7 +45,7 @@ argo-cd:
   repoServer:
     initContainers:
     - name: install-helm-plugins
-      image: alpine/helm:3
+      image: alpine/helm:4
       volumeMounts:
       - name: helm-working-dir
         mountPath: /helm-working-dir

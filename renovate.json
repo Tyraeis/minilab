@@ -75,5 +75,6 @@
     "automerge": true
   },
   "ignoreTests": true,
-  "prConcurrentLimit": 0
+  "prConcurrentLimit": 0,
+  "minimumReleaseAge": "14 days"
 }

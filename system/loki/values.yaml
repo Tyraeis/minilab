@@ -1,9 +1,5 @@
 _common_pod_settings: &common_pod_settings
-  extraEnvFrom:
-  - secretRef:
-      name: s3-key
-  extraArgs:
-  - -config.expand-env=true
+
 
 loki:
   loki:
@@ -59,20 +55,22 @@ loki:
     writebackSizeLimit: 10MB
     allocatedMemory: 1024
 
-  deploymentMode: SimpleScalable
+  deploymentMode: Monolithic
 
   singleBinary:
-    replicas: 0
+    replicas: 3
+    extraEnvFrom:
+    - secretRef:
+        name: s3-key
+    extraArgs:
+    - -config.expand-env=true
 
   backend:
-    <<: *common_pod_settings
-    replicas: 2
+    replicas: 0
   read:
-    <<: *common_pod_settings
-    replicas: 2
+    replicas: 0
   write:
-    <<: *common_pod_settings
-    replicas: 3
+    replicas: 0
 
   distributor:
     replicas: 0
@@ -89,8 +87,86 @@ loki:
   compactor:
     replicas: 0
 
-promtail:
-  config:
-    logLevel: info
-    clients:
-    - url: http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push
+alloy:
+  configMap:
+    content: |-
+      discovery.kubernetes "pod" {
+        role = "pod"
+        selectors {
+          role = "pod"
+          field = "spec.nodeName=" + coalesce(sys.env("HOSTNAME"), constants.hostname)
+        }
+      }
+
+      discovery.relabel "pod_logs" {
+        targets = discovery.kubernetes.pod.targets
+
+        // Label creation - "namespace" field from "__meta_kubernetes_namespace"
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          action = "replace"
+          target_label = "namespace"
+        }
+
+        // Label creation - "pod" field from "__meta_kubernetes_pod_name"
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          action = "replace"
+          target_label = "pod"
+        }
+
+        // Label creation - "container" field from "__meta_kubernetes_pod_container_name"
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          action = "replace"
+          target_label = "container"
+        }
+
+        // Label creation -  "app" field from "__meta_kubernetes_pod_label_app_kubernetes_io_name"
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+          action = "replace"
+          target_label = "app"
+        }
+
+        // Label creation -  "job" field from "__meta_kubernetes_namespace" and "__meta_kubernetes_pod_container_name"
+        // Concatenate values __meta_kubernetes_namespace/__meta_kubernetes_pod_container_name
+        rule {
+          source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
+          action = "replace"
+          target_label = "job"
+          separator = "/"
+          replacement = "$1"
+        }
+
+        // Label creation - "__path__" field from "__meta_kubernetes_pod_uid" and "__meta_kubernetes_pod_container_name"
+        // Concatenate values __meta_kubernetes_pod_uid/__meta_kubernetes_pod_container_name.log
+        rule {
+          source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+          action = "replace"
+          target_label = "__path__"
+          separator = "/"
+          replacement = "/var/log/pods/*$1/*.log"
+        }
+
+        // Label creation -  "container_runtime" field from "__meta_kubernetes_pod_container_id"
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_id"]
+          action = "replace"
+          target_label = "container_runtime"
+          regex = `^(\S+):\/\/.+$`
+          replacement = "$1"
+        }
+      }
+
+      // loki.source.kubernetes tails logs from Kubernetes containers using the Kubernetes API.
+      loki.source.kubernetes "pod_logs" {
+        targets    = discovery.relabel.pod_logs.output
+        forward_to = [loki.write.loki_write.receiver]
+      }
+
+      loki.write "loki_write" {
+        endpoint {
+          url = "http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
+        }
+      }

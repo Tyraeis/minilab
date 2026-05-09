@@ -67,27 +67,33 @@ class ConfigRenderer:
     return self._vars[var]
 
 
-def talosctl(*args: str, dry_run: bool, ip: str | None = None):
-  cmd = ['talosctl', *args]
-  if ip != None:
-    cmd.extend(['--talosconfig=./talosconfig', '--nodes', ip])
+class Talosctl:
+  talosctl_cmd: str
 
-  print('$ ' + ' '.join(cmd))
-  if not dry_run:
-    subprocess.run(cmd, check=True)
+  def __init__(self, talosctl_cmd: str):
+    self.talosctl_cmd = talosctl_cmd
 
-def validate_config(config_file: str):
-  talosctl('validate', '--config', config_file, '--mode', 'metal', '--strict', dry_run=False)
+  def talosctl(self, *args: str, dry_run: bool, ip: str | None = None):
+    cmd = [self.talosctl_cmd, *args]
+    if ip != None:
+      cmd.extend(['--talosconfig=./talosconfig', '--nodes', ip])
 
-def apply_config(ip: str, config_file: str, *, dry_run: bool):
-  dry_run_arg = ['--dry-run'] if dry_run else []
-  talosctl('apply-config', '--file', config_file, *dry_run_arg, ip=ip, dry_run=False)
+    print('$ ' + ' '.join(cmd))
+    if not dry_run:
+      subprocess.run(cmd, check=True)
 
-def upgrade(ip: str, image_id: str, talos_version: str, *, dry_run: bool):
-  talosctl('upgrade', '--image', f'factory.talos.dev/metal-installer/{image_id}:v{talos_version}', ip=ip, dry_run=dry_run)
+  def validate_config(self, config_file: str):
+    self.talosctl('validate', '--config', config_file, '--mode', 'metal', '--strict', dry_run=False)
 
-def reboot(ip: str, *, dry_run: bool):
-  talosctl('reboot', ip=ip, dry_run=dry_run)
+  def apply_config(self, ip: str, config_file: str, *, dry_run: bool):
+    dry_run_arg = ['--dry-run'] if dry_run else []
+    self.talosctl('apply-config', '--file', config_file, *dry_run_arg, ip=ip, dry_run=False)
+
+  def upgrade(self, ip: str, image_id: str, talos_version: str, *, dry_run: bool):
+    self.talosctl('upgrade', '--image', f'factory.talos.dev/metal-installer/{image_id}:v{talos_version}', ip=ip, dry_run=dry_run)
+
+  def reboot(self, ip: str, *, dry_run: bool):
+    self.talosctl('reboot', ip=ip, dry_run=dry_run)
 
 
 type Inventory = dict[str, Group]
@@ -108,6 +114,7 @@ def parse_args() -> Namespace:
   parser.add_argument('--group', action='store', default=None, help='only operate on nodes in the specified group')
   parser.add_argument('--role', action='store', default=None, help='only operate on nodes with the specified role')
   parser.add_argument('--hardware', action='store', default=None, help='only operate on nodes with the specified hardware')
+  parser.add_argument('--talosctl', action='store', default='talosctl', help="talosctl executable to use")
   parser.add_argument('-d', '--dry-run', action='store_true')
   return parser.parse_args()
 
@@ -118,6 +125,7 @@ def main():
   os.chdir(os.path.dirname(os.path.realpath(__file__)))
   os.makedirs('rendered', exist_ok=True)
 
+  talosctl = Talosctl(args.talosctl)
   imageFactory = ImageFactory()
   configRenderer = ConfigRenderer()
 
@@ -139,15 +147,15 @@ def main():
       if args.apply or args.genconfig:
         config_filename = configRenderer.gen_config(hostname, group['role'], group['hardware'],
                                                     hostname=hostname, ip=ip, image_factory_id=image_id)
-        validate_config(config_filename)
+        talosctl.validate_config(config_filename)
         if args.apply:
-          apply_config(ip, config_filename, dry_run=args.dry_run)
+          talosctl.apply_config(ip, config_filename, dry_run=args.dry_run)
 
       if args.upgrade:
-        upgrade(ip, image_id, configRenderer.get_global('talos_version'), dry_run=args.dry_run)
+        talosctl.upgrade(ip, image_id, configRenderer.get_global('talos_version'), dry_run=args.dry_run)
 
       if args.reboot:
-        reboot(ip, dry_run=args.dry_run)
+        talosctl.reboot(ip, dry_run=args.dry_run)
 
 
 if __name__ == '__main__':

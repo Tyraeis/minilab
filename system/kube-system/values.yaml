@@ -19,6 +19,9 @@ cilium:
   kubeProxyReplacement: true
   # bpfClockProbe: true
 
+  dnsProxy:
+    dnsRejectResponseCode: nameError
+
   k8sServiceHost: localhost
   k8sServicePort: 7445
 

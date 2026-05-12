@@ -28,8 +28,10 @@ class ImageFactory:
 class ConfigRenderer:
   _env = Environment(loader=FileSystemLoader('.'))
   _vars: dict[str, Any] = {}
+  _talosctl: Talosctl
 
-  def __init__(self) -> None:
+  def __init__(self, talosctl: Talosctl) -> None:
+    self._talosctl = talosctl
     with open(f'vars.yaml') as vars_file:
       self._vars = yaml.safe_load(vars_file)
 
@@ -52,7 +54,7 @@ class ConfigRenderer:
     ]
 
     outfile = f'rendered/{name}.yaml'
-    talosctl(
+    self._talosctl(
       'gen', 'config', self.get_global('cluster_name'), self.get_global('cluster_endpoint'),
       '--with-secrets', 'secrets.yaml',
       '--kubernetes-version', self.get_global('kubernetes_version'),
@@ -73,7 +75,7 @@ class Talosctl:
   def __init__(self, talosctl_cmd: str):
     self.talosctl_cmd = talosctl_cmd
 
-  def talosctl(self, *args: str, dry_run: bool, ip: str | None = None):
+  def __call__(self, *args: str, dry_run: bool, ip: str | None = None):
     cmd = [self.talosctl_cmd, *args]
     if ip != None:
       cmd.extend(['--talosconfig=./talosconfig', '--nodes', ip])
@@ -83,17 +85,17 @@ class Talosctl:
       subprocess.run(cmd, check=True)
 
   def validate_config(self, config_file: str):
-    self.talosctl('validate', '--config', config_file, '--mode', 'metal', '--strict', dry_run=False)
+    self('validate', '--config', config_file, '--mode', 'metal', '--strict', dry_run=False)
 
   def apply_config(self, ip: str, config_file: str, *, dry_run: bool):
     dry_run_arg = ['--dry-run'] if dry_run else []
-    self.talosctl('apply-config', '--file', config_file, *dry_run_arg, ip=ip, dry_run=False)
+    self('apply-config', '--file', config_file, *dry_run_arg, ip=ip, dry_run=False)
 
   def upgrade(self, ip: str, image_id: str, talos_version: str, *, dry_run: bool):
-    self.talosctl('upgrade', '--image', f'factory.talos.dev/metal-installer/{image_id}:v{talos_version}', ip=ip, dry_run=dry_run)
+    self('upgrade', '--image', f'factory.talos.dev/metal-installer/{image_id}:v{talos_version}', ip=ip, dry_run=dry_run)
 
   def reboot(self, ip: str, *, dry_run: bool):
-    self.talosctl('reboot', ip=ip, dry_run=dry_run)
+    self('reboot', ip=ip, dry_run=dry_run)
 
 
 type Inventory = dict[str, Group]
@@ -127,7 +129,7 @@ def main():
 
   talosctl = Talosctl(args.talosctl)
   imageFactory = ImageFactory()
-  configRenderer = ConfigRenderer()
+  configRenderer = ConfigRenderer(talosctl)
 
   inventory = {
     group_name: group

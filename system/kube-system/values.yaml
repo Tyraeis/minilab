@@ -6,7 +6,7 @@ cilium:
   bpf:
     masquerade: true
     tproxy: true
-    # datapathMode: netkit
+    datapathMode: netkit
     # distributedLRU:
     #   enabled: true
     # mapDynamicSizeRatio: 0.08

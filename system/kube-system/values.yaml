@@ -15,8 +15,6 @@ cilium:
   ipv6:
     enabled: false
 
-  enableIPv4BIGTCP: true
-
   kubeProxyReplacement: true
   # bpfClockProbe: true
 

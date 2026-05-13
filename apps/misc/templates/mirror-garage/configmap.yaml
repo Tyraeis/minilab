@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mirror-garage
+data:
+  mirror-garage.sh: |
+    cd /tmp
+
+    apk add --no-cache curl jq
+    curl 'https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases?pre-release=false&limit=1' \
+      -H 'accept: application/json' -o latest_release.json
+
+    version=$(jq -r '.[0].tag_name' latest_release.json)
+    tarball=$(jq -r '.[0].tarball_url' latest_release.json)
+    prev_version=$(cat /opt/persist/garage_version)
+
+    echo "Latest version: '$version' at $tarball"
+    echo "Last mirrored version: '$prev_version'"
+
+    if [ "$version" != "$prev_version" ]; then
+      echo "Mirroring $version"
+
+      curl "$tarball" -o ${version}.tar.gz \
+       && gzip -d ${version}.tar.gz \
+       && tar xfv ${version}.tar \
+       && cd ./garage/script/helm \
+       && tar cfv ${version}.tar * \
+       && gzip ${version}.tar \
+       && curl --user $USERNAME:$PASSWORD -X POST --upload-file ${version}.tar.gz https://git.ncraig.dev/api/packages/noahc/helm/api/charts \
+       && echo -n $version >/opt/persist/garage_version
+    else
+      echo "$version is already mirrored"
+    fi

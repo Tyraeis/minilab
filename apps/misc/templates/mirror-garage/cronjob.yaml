@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mirror-garage
+spec:
+  schedule: "30 15 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: mirror-garage
+            image: alpine:3
+            command:
+            - /bin/sh
+            - /opt/scripts/mirror-garage.sh
+            envFrom:
+            - secretRef:
+                name: mirror-garage-secret
+            volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /opt/persist
+              name: persist
+            - mountPath: /opt/scripts
+              name: scripts
+            securityContext:
+              seccompProfile:
+                type: RuntimeDefault
+              capabilities:
+                drop: [ALL]
+          volumes:
+          - name: tmp
+            emptyDir: {}
+          - name: persist
+            persistentVolumeClaim:
+              claimName: mirror-garage
+          - name: scripts
+            configMap:
+              name: mirror-garage

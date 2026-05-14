@@ -139,12 +139,14 @@ def main():
     if args.hardware == None or group['hardware'] == args.hardware
   }
 
+  pause = not args.dry_run and not args.nopause
+
   for group_name, group in inventory.items():
     image_id = imageFactory.get_image_id(group['hardware'])
     for hostname, ip in group['nodes'].items():
       print(f'\n> {group_name}.{hostname} ({ip})')
-      if not args.dry_run and not args.nopause:
-        input()
+      if pause:
+        pause = input("Press enter to continue, or 'y' to continue without pausing") != 'y'
 
       if args.apply or args.genconfig:
         config_filename = configRenderer.gen_config(hostname, group['role'], group['hardware'],

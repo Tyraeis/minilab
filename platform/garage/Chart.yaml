@@ -3,5 +3,5 @@ name: garage
 version: "0.0.0"
 dependencies:
 - name: garage
-  repository: "@garage"
-  version: "*"
+  repository: "https://git.ncraig.dev/api/packages/noahc/helm"
+  version: "0.9.3"

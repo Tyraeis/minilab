@@ -1,6 +1,6 @@
 dependencies:
 - name: garage
-  repository: git+https://git.deuxfleurs.fr/Deuxfleurs/garage@script/helm?ref=ba1f30d3930d540cf75b3d384589966bf5f7e34a
-  version: 0.9.1
-digest: sha256:a76426c4fc8aa736bd80856561a6af2e915f441d5de9573475b360534f247636
-generated: "2026-01-23T00:26:14.162008261-05:00"
+  repository: https://git.ncraig.dev/api/packages/noahc/helm
+  version: 0.9.3
+digest: sha256:54b5fb84b667e3764cbbeec0da1fa60eb3529eaf4b770a2e8c9d68d567d68a66
+generated: "2026-05-13T21:21:33.349099574-04:00"

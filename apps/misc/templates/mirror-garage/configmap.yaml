@@ -6,7 +6,7 @@ data:
   mirror-garage.sh: |
     cd /tmp
 
-    apk add --no-cache curl jq
+    apk add --no-cache curl jq helm
     curl 'https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases?pre-release=false&limit=1' \
       -H 'accept: application/json' -o latest_release.json
 
@@ -23,10 +23,8 @@ data:
       curl "$tarball" -o ${version}.tar.gz \
        && gzip -d ${version}.tar.gz \
        && tar xfv ${version}.tar \
-       && cd ./garage/script/helm \
-       && tar cfv ${version}.tar * \
-       && gzip ${version}.tar \
-       && curl --user $USERNAME:$PASSWORD -X POST --upload-file ${version}.tar.gz https://git.ncraig.dev/api/packages/noahc/helm/api/charts \
+       && helm package ./garage/script/helm/garage \
+       && curl --user $USERNAME:$PASSWORD -X POST --upload-file ./garage-*.tgz https://git.ncraig.dev/api/packages/noahc/helm/api/charts \
        && echo -n $version >/opt/persist/garage_version
     else
       echo "$version is already mirrored"

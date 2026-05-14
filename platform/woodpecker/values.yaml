@@ -1,0 +1,25 @@
+woodpecker:
+  server:
+    env:
+      WOODPECKER_OPEN: "true"
+      WOODPECKER_HOST: "https://woodpecker.ncraig.dev"
+      WOODPECKER_ADMIN: "noahc"
+      WOODPECKER_FORGEJO: "true"
+      WOODPECKER_FORGEJO_URL: "https://git.ncraig.dev"
+    extraSecretNamesForEnvFrom:
+    - woodpecker-env
+
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      tls:
+      - secretName: woodpecker-ncraig-dev-cert
+        hosts:
+        - woodpecker.ncraig.dev
+      hosts:
+      - host: woodpecker.ncraig.dev
+        paths:
+        - path: /
+

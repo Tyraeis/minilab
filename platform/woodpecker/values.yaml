@@ -6,6 +6,7 @@ woodpecker:
       WOODPECKER_ADMIN: "noahc"
       WOODPECKER_FORGEJO: "true"
       WOODPECKER_FORGEJO_URL: "https://git.ncraig.dev"
+      WOODPECKER_PLUGINS_PRIVILEGED: "woodpeckerci/plugin-docker-buildx"
     extraSecretNamesForEnvFrom:
     - woodpecker-env
 

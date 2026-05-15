@@ -14,3 +14,9 @@ spec:
     limits:
       cpu: 1000m
       memory: 1Gi
+  managed:
+    roles:
+    - name: concourse
+      login: true
+      passwordSecret:
+        name: concourse-password

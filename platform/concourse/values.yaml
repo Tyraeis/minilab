@@ -1,0 +1,35 @@
+concourse:
+  postgresql:
+    enabled: false
+  secrets:
+    create: false
+
+  concourse:
+    web:
+      externalUrl: https://concourse.ncraig.dev
+      localAuth:
+        enabled: false
+      postgres:
+        host: postgres-rw.postgres.svc.cluster.local
+        database: concourse
+
+  auth:
+    oidc:
+      enabled: true
+      displayname: Kanidm
+      issuer: https://sso.ncraig.dev
+    mainTeam:
+      oidc:
+        group: concourse_admins
+
+  web:
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+      - concourse.ncraig.dev
+      tls:
+      - secretName: concourse-ncraig-dev-cert
+        hosts:
+        - concourse.ncraig.dev

@@ -3,6 +3,7 @@ groups:
 - name: argocd_admins
 - name: git_users
 - name: forgejo_admins
+- name: concourse_admins
 - name: grafana_users
 - name: grafana_admins
 - name: jellyfin_users
@@ -23,6 +24,13 @@ oauth_clients:
     - https://argocd.ncraig.dev/auth/callback
     scope_maps:
       argocd_users: profile email openid groups
+  concourse:
+    displayname: Concourse
+    landing_url: https://concourse.ncraig.dev/
+    redirect_urls:
+    - https://concourse.ncraig.dev/sky/issuer/callback
+    scope_maps:
+      git_users: profile email openid groups
   forgejo:
     displayname: Forgejo
     landing_url: https://git.ncraig.dev/user/login

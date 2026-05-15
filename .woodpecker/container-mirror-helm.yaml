@@ -2,6 +2,8 @@ when:
 - event: push
   branch: ${CI_REPO_DEFAULT_BRANCH}
   path: containers/mirror-helm
+- event: manual
+  evaluate: 'FILES contains "container-mirror-helm"'
 
 steps:
 - name: build-and-publish

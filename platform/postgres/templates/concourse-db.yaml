@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: concourse-db
+spec:
+  name: concourse
+  owner: concourse
+  cluster:
+    name: postgres

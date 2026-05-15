@@ -24,6 +24,7 @@ cluster:
           - prometheus
           - loki
           - node-feature-discovery
+          - concourse
           runtimeClasses: []
           usernames: []
         kind: PodSecurityConfiguration

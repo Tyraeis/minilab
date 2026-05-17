@@ -1,0 +1,40 @@
+resources:
+- name: repo
+  type: git
+  source:
+    uri: https://git.ncraig.dev/noahc/minilab.git
+    paths:
+    - containers/mirror-helm/*
+- name: mirror-helm
+  type: registry-image
+  source:
+    repository: git.ncraig.dev/noahc/mirror-helm
+    username: ((registry-username))
+    password: ((registry-password))
+
+jobs:
+- name: build-and-publish
+  plan:
+  - get: repo
+    trigger: true
+  - set_pipeline: self
+    file: repo/containers/mirror-helm/pipeline.yaml
+  - task: build-image
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source: { repository: concourse/oci-build-task }
+      inputs:
+      - name: repo
+      outputs:
+      - name: image
+      params:
+        CONTEXT: repo/containers/mirror-helm
+      run:
+        path: build
+  - put: mirror-helm
+    params:
+      image: image/image.tar
+      tag: latest

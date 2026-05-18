@@ -8,24 +8,33 @@ spec:
     spec:
       template:
         spec:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
           restartPolicy: Never
           containers:
           - name: mirror-garage
-            image: alpine:3
-            command:
-            - /bin/sh
-            - /opt/scripts/mirror-garage.sh
+            image: git.ncraig.dev/noahc/mirror-helm:latest
+            env:
+            - name: SOURCE
+              value: https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases
+            - name: CHART_SUBPATH
+              value: garage/script/helm/garage
+            - name: DEST
+              value: https://git.ncraig.dev/api/packages/noahc/helm/api/charts
             envFrom:
             - secretRef:
                 name: mirror-garage-secret
             volumeMounts:
             - mountPath: /tmp
               name: tmp
-            - mountPath: /opt/persist
+            - mountPath: /opt
               name: persist
-            - mountPath: /opt/scripts
-              name: scripts
             securityContext:
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              allowPrivilegeEscalation: false
               seccompProfile:
                 type: RuntimeDefault
               capabilities:

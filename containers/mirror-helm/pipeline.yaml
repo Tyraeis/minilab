@@ -9,6 +9,7 @@ resources:
   type: registry-image
   source:
     repository: git.ncraig.dev/noahc/mirror-helm
+    tag: latest
     username: ((registry-username))
     password: ((registry-password))
 
@@ -37,4 +38,3 @@ jobs:
   - put: mirror-helm
     params:
       image: image/image.tar
-      tag: latest

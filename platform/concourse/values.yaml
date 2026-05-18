@@ -26,6 +26,17 @@ concourse:
 
     worker:
       runtime: containerd
+      containerd:
+        seccompProfile: /seccomp/seccomp.json
+
+  worker:
+    additionalVolumeMounts:
+    - name: seccomp
+      mountPath: /seccomp
+    additionalVolumes:
+    - name: seccomp
+      configMap:
+        name: seccomp-profile
 
   web:
     ingress:

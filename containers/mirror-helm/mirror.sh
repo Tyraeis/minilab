@@ -16,7 +16,7 @@ if [ "$version" != "$prev_version" ]; then
   curl "$tarball" -o ${version}.tar.gz \
     && gzip -d ${version}.tar.gz \
     && tar xfv ${version}.tar \
-    && helm package ./garage/script/helm/garage \
+    && helm package "$CHART_SUBPATH" \
     && curl --user $USERNAME:$PASSWORD -X POST --upload-file ./garage-*.tgz "$DEST" \
     && echo -n $version >/opt/version
 else

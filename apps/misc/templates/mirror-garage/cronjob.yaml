@@ -46,6 +46,3 @@ spec:
           - name: persist
             persistentVolumeClaim:
               claimName: mirror-garage
-          - name: scripts
-            configMap:
-              name: mirror-garage

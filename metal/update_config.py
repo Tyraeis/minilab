@@ -146,7 +146,10 @@ def main():
     for hostname, ip in group['nodes'].items():
       print(f'\n> {group_name}.{hostname} ({ip})')
       if pause:
-        pause = input("Press enter to continue, or 'y' to continue without pausing") != 'y'
+        value = input("Press enter to continue, 'y' to continue without pausing, or 's' to skip: ")
+        pause = value != 'y'
+        if value == 's':
+          continue
 
       if args.apply or args.genconfig:
         config_filename = configRenderer.gen_config(hostname, group['role'], group['hardware'],

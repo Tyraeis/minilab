@@ -1,4 +1,7 @@
 concourse:
+  image: git.ncraig.dev/noahc/concourse
+  imageDigest: sha256:ecbe3cdac67feb5fc070da5ea68375eb01259401493f768ce57c111f9e04dac1
+
   postgresql:
     enabled: false
   secrets:

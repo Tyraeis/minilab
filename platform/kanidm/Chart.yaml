@@ -2,4 +2,4 @@ apiVersion: v2
 name: kanidm
 version: "0.0.0"
 # renovate: image=kanidm/server
-appVersion: "1.10.1"
+appVersion: "1.10.2"

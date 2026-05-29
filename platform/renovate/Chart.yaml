@@ -2,4 +2,4 @@ apiVersion: v2
 name: renovate
 version: "0.0.0"
 # renovate: image=renovate/renovate
-appVersion: "43.178.0"
+appVersion: "43.180.0"

@@ -6,7 +6,7 @@ groups:
 - name: concourse_admins
 - name: grafana_users
 - name: grafana_admins
-- name: jellyfin_users
+- name: media_users
 - name: longhorn_admins
 - name: prometheus_users
 - name: syncthing_users
@@ -58,7 +58,7 @@ oauth_clients:
     redirect_urls:
     - https://jellyfin.ncraig.dev/oauth2/callback
     scope_maps:
-      jellyfin_users: profile email openid
+      media_users: profile email openid
   longhorn:
     displayname: Longhorn
     landing_url: https://longhorn.ncraig.dev/

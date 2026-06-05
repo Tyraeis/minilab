@@ -63,12 +63,18 @@ class KanidmConfig(NamedTuple):
   clients: dict[str, Client]
 
 
-def read_config_yaml() -> KanidmConfig:
-  with open(f'kanidm_config.yaml') as f:
-    config_yaml: KanidmConfigYaml = yaml.safe_load(f)
+def read_yaml(path: str) -> KanidmConfigYaml:
+  with open(path) as f:
+    return yaml.safe_load(f)
+
+
+def read_config_yamls(*paths: str) -> KanidmConfig:
+  config_yamls = [read_yaml(path) for path in paths]
+  client_yamls = { k: v for config in config_yamls for k, v in config['oauth_clients'].items() }
+  group_yamls = [ group for config in config_yamls for group in config['groups'] ]
 
   clients: dict[str, Client] = {}
-  for client_name, client_yaml in config_yaml['oauth_clients'].items():
+  for client_name, client_yaml in client_yamls.items():
     client = Client()
     client.name = client_name
     client.displayname = client_yaml['displayname']
@@ -81,7 +87,7 @@ def read_config_yaml() -> KanidmConfig:
     clients[client_name] = client
 
   groups: dict[str, Group] = {}
-  for group_yaml in config_yaml['groups']:
+  for group_yaml in group_yamls:
     group = Group()
     group.name = group_yaml['name']
     group.posix = 'posix' in group_yaml and group_yaml['posix'] == True
@@ -282,13 +288,14 @@ class ClientDiffer(DictDiffer[str, Client]):
 def parse_args() -> Namespace:
   parser = ArgumentParser()
   parser.add_argument('--dry-run', action='store_true')
+  parser.add_argument('-f', '--extra-file', action='append', default=[])
   return parser.parse_args()
 
 
 def main(args: Namespace):
   kanidm('login', dry_run=False)
 
-  config = read_config_yaml()
+  config = read_config_yamls('kanidm_config.yaml', *args.extra_file)
 
   GroupDiffer(args.dry_run).diff(list_existing_groups(), config.groups)
   ClientDiffer(args.dry_run).diff(list_existing_clients(), config.clients)

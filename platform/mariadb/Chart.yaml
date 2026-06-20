@@ -3,7 +3,7 @@ name: mariadb
 version: "0.0.0"
 dependencies:
 - name: mariadb-operator-crds
-  version: "26.3.0"
+  version: "26.6.0"
   repository: https://helm.mariadb.com/mariadb-operator
 - name: mariadb-operator
   version: "26.6.0"

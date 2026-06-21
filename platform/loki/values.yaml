@@ -102,6 +102,14 @@ alloy:
         discovery.relabel "pod_logs" {
           targets = discovery.kubernetes.pod.targets
 
+          // Drop noisy loki-gateway service
+          rule {
+            source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
+            separator = "/"
+            regex = "loki/nginx"
+            action = "drop"
+          }
+
           // Label creation - "namespace" field from "__meta_kubernetes_namespace"
           rule {
             source_labels = ["__meta_kubernetes_namespace"]

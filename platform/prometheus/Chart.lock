@@ -4,6 +4,6 @@ dependencies:
   version: 86.2.1
 - name: oauth2-proxy
   repository: https://oauth2-proxy.github.io/manifests/
-  version: 10.6.0
-digest: sha256:f47d43f5b969f2a2dc018b4b6fde3c43f8f4c8d76587ecdfff71c3542661f9c6
-generated: "2026-06-23T10:01:04.579969418Z"
+  version: 10.6.1
+digest: sha256:cbf4b06f56a2a5bb78512800cd10df43b7a52bb0335c15a6448ffe2f4faeeeaf
+generated: "2026-06-23T12:01:31.61484253Z"

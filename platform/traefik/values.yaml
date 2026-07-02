@@ -17,6 +17,5 @@ traefik:
       entryPoints:
       - traefik
 
-  logs:
-    access:
-      enabled: true
+  accessLog:
+    enabled: true

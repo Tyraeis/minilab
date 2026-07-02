@@ -41,6 +41,15 @@
     },
     {
       "matchPackageNames": [
+        "longhorn"
+      ],
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "automerge": false
+    },
+    {
+      "matchPackageNames": [
         "registry.k8s.io/*",
         "ghcr.io/siderolabs/kubelet"
       ],

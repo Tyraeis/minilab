@@ -14,6 +14,7 @@ groups:
   posix: true
 - name: nas_admins
   posix: true
+- name: vpn_users
 
 oauth_clients:
   argocd:
@@ -38,6 +39,7 @@ oauth_clients:
     - https://git.ncraig.dev/user/oauth2/kanidm/callback
     scope_maps:
       git_users: profile email openid groups
+    prefer_short_username: true
   grafana:
     displayname: Grafana
     landing_url: https://grafana.ncraig.dev/
@@ -45,6 +47,14 @@ oauth_clients:
     - https://grafana.ncraig.dev/login/generic_oauth
     scope_maps:
       grafana_users: profile email openid groups
+  headscale:
+    displayname: Headscale
+    landing_url: https://vpn.ncraig.dev/
+    redirect_urls:
+    - https://vpn.ncraig.dev/oidc/callback
+    scope_maps:
+      vpn_users: profile email openid
+    prefer_short_username: true
   homepage:
     displayname: Homepage
     landing_url: https://home.ncraig.dev/

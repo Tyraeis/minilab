@@ -22,7 +22,8 @@ ClientYaml = TypedDict('ClientYaml', {
   'displayname': str,
   'landing_url': str,
   'redirect_urls': list[str] | None,
-  'scope_maps': dict[str, str]
+  'scope_maps': dict[str, str],
+  'prefer_short_username': bool
 })
 
 class Client:
@@ -31,13 +32,15 @@ class Client:
   landing_url: str
   redirect_urls: set[str]
   scope_maps: dict[str, set[str]]
+  prefer_short_username: bool = False
 
   def __str__(self) -> str:
     return f"""{self.name}:
   displayname: {self.displayname}
   landing_url: {self.landing_url}
   redirect_urls: {"".join(f"\n    - {url}" for url in self.redirect_urls)}
-  scope_maps: {"".join(f"\n    {group}: {" ".join(scopes)}" for group, scopes in self.scope_maps.items())}"""
+  scope_maps: {"".join(f"\n    {group}: {" ".join(scopes)}" for group, scopes in self.scope_maps.items())}
+  prefer_short_username: {self.prefer_short_username}"""
 
 
 GroupYaml = TypedDict('GroupYaml', {
@@ -84,6 +87,7 @@ def read_config_yamls(*paths: str) -> KanidmConfig:
       group_name: set(scope_map.split(' '))
       for group_name, scope_map in client_yaml['scope_maps'].items()
     }
+    client.prefer_short_username = client_yaml.get('prefer_short_username', False)
     clients[client_name] = client
 
   groups: dict[str, Group] = {}
@@ -113,9 +117,11 @@ class KanidmObject:
       key, _, value = line.partition(':')
       self.fields.setdefault(key, []).append(value.strip())
 
-  def get_one(self, key: str) -> str:
+  def get_one(self, key: str, default: str | None = None) -> str:
     if key in self.fields and len(self.fields[key]) > 0:
       return self.fields[key][0]
+    elif default != None:
+      return default
     else:
       raise AssertionError(f"kanidm object is missing field '{key}'")
 
@@ -136,6 +142,7 @@ class KanidmObject:
       for scope_map in self.get_many('oauth2_rs_scope_map')
       for group, scopes in [parse_scope_map(scope_map)]
     }
+    client.prefer_short_username = self.get_one('oauth2_prefer_short_username', 'false') == 'true'
     return client
 
   def as_group(self) -> Group:
@@ -278,6 +285,11 @@ class ClientDiffer(DictDiffer[str, Client]):
       kanidm_oauth('set-displayname', key, new.displayname, dry_run=self._dry_run)
     if old.landing_url != new.landing_url:
       kanidm_oauth('set-landing-url', key, new.landing_url, dry_run=self._dry_run)
+    if old.prefer_short_username != new.prefer_short_username:
+      if new.prefer_short_username:
+        kanidm_oauth('prefer-short-username', key, dry_run=self._dry_run)
+      else:
+        kanidm_oauth('prefer-spn-username', key, dry_run=self._dry_run)
     RedirectUrlDiffer(key, self._dry_run).diff(old.redirect_urls, new.redirect_urls)
     ScopeMapDiffer(key, self._dry_run).diff(old.scope_maps, new.scope_maps)
 

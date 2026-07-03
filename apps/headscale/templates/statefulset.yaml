@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: headscale
+  labels:
+    app.kubernetes.io/name: headscale
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: headscale
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: headscale
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: headscale
+          image: "ghcr.io/juanfont/headscale:{{ .Chart.AppVersion }}"
+          args:
+            - serve
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: grpc
+              containerPort: 50443
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /etc/headscale
+              name: config
+            - mountPath: /var/lib/headscale
+              name: lib
+            - mountPath: /var/run/headscale
+              name: tmp
+            - mountPath: /etc/headscale/secrets
+              name: oidc-secret
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: [ALL]
+      volumes:
+        - name: config
+          configMap:
+            name: headscale
+        - name: oidc-secret
+          secret:
+            secretName: oidc-secret
+        - name: tmp
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: lib
+      spec:
+        storageClassName: longhorn
+        accessModes: [ ReadWriteOnce ]
+        resources:
+          requests:
+            storage: 4Gi

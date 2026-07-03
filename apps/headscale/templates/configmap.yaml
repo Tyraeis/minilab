@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: headscale
+  namespace: headscale
+data:
+  config.yaml: |
+    server_url: https://vpn.ncraig.dev
+    listen_addr: 0.0.0.0:8080
+    metrics_listen_addr: 0.0.0.0:9090
+    grpc_listen_addr: 0.0.0.0:50443
+    trusted_proxies:
+      - 10.244.0.0/16
+    tls_cert_path: ""
+    tls_key_path: ""
+    disable_check_updates: true
+    prefixes:
+      v4: 100.64.0.0/10
+    noise:
+      private_key_path: /var/lib/headscale/noise.key
+    dns:
+      magic_dns: false
+      override_local_dns: false
+    derp:
+      urls:
+        - https://controlplane.tailscale.com/derpmap/default
+      auto_update_enabled: true
+      update_frequency: 3h
+    database:
+      type: sqlite
+      gorm:
+        prepare_stmt: true
+        parameterized_queries: true
+        skip_err_record_not_found: true
+        slow_threshold: 1000
+      sqlite:
+        path: /var/lib/headscale/db.sqlite
+        write_ahead_log: true
+        wal_autocheckpoint: 1000
+    oidc:
+      only_start_if_oidc_is_available: true
+      issuer: https://sso.ncraig.dev/oauth2/openid/headscale
+      client_id: headscale
+      client_secret_path: /etc/headscale/secrets/oidc_client_secret
+      pkce:
+        enabled: true

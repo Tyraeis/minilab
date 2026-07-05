@@ -73,19 +73,13 @@ spec:
         nfs:
           server: 192.168.5.5
           path: /media
+      - name: cache
+        nfs:
+          server: 192.168.5.5
+          path: /jellyfin-cache
       - name: tmp
         emptyDir:
   volumeClaimTemplates:
-  - metadata:
-      name: cache
-      labels:
-        {{- include "jellyfin.labels" . | nindent 8 }}
-    spec:
-      storageClassName: longhorn
-      accessModes: [ ReadWriteOnce ]
-      resources:
-        requests:
-          storage: 4Gi
   - metadata:
       name: config
       labels:

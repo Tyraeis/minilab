@@ -26,6 +26,9 @@ longhorn:
   preUpgradeChecker:
     jobEnabled: false
 
+  persistence:
+    createStorageClass: false
+
 oauth2-proxy:
   config:
     existingSecret: longhorn-oauth-secret

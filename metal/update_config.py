@@ -97,6 +97,9 @@ class Talosctl:
   def reboot(self, ip: str, *, dry_run: bool):
     self('reboot', ip=ip, dry_run=dry_run)
 
+  def health(self, ip: str, *, dry_run: bool):
+    self('health', ip=ip, dry_run=dry_run)
+
 
 type Inventory = dict[str, Group]
 Group = TypedDict('Group', {'role': str, 'hardware': str, 'nodes': dict[str, str]})
@@ -116,6 +119,7 @@ def parse_args() -> Namespace:
   parser.add_argument('--group', action='store', default=None, help='only operate on nodes in the specified group')
   parser.add_argument('--role', action='store', default=None, help='only operate on nodes with the specified role')
   parser.add_argument('--hardware', action='store', default=None, help='only operate on nodes with the specified hardware')
+  parser.add_argument('--node', action='store', default=None, help='only operate on a specific node')
   parser.add_argument('--talosctl', action='store', default='talosctl', help="talosctl executable to use")
   parser.add_argument('-d', '--dry-run', action='store_true')
   return parser.parse_args()
@@ -131,19 +135,31 @@ def main():
   imageFactory = ImageFactory()
   configRenderer = ConfigRenderer(talosctl)
 
+  raw_inventory = read_inventory('prod')
   inventory = {
     group_name: group
-    for group_name, group in read_inventory('prod').items()
+    for group_name, group in raw_inventory.items()
     if args.group == None or group_name == args.group
     if args.role == None or group['role'] == args.role
     if args.hardware == None or group['hardware'] == args.hardware
   }
+
+  # ip address of an arbitrary control plane node
+  cp_ip = next(
+    ip
+    for group in raw_inventory.values()
+    if group['role'] == 'controlplane'
+    for ip in group['nodes'].values()
+  )
 
   pause = not args.dry_run and not args.nopause
 
   for group_name, group in inventory.items():
     image_id = imageFactory.get_image_id(group['hardware'])
     for hostname, ip in group['nodes'].items():
+      if args.node != None and args.node != hostname:
+        continue
+
       print(f'\n> {group_name}.{hostname} ({ip})')
       if pause:
         value = input("Press enter to continue, 'y' to continue without pausing, or 's' to skip: ")
@@ -163,6 +179,8 @@ def main():
 
       if args.reboot:
         talosctl.reboot(ip, dry_run=args.dry_run)
+
+      talosctl.health(cp_ip, dry_run=args.dry_run)
 
 
 if __name__ == '__main__':

@@ -1,10 +1,29 @@
 machine:
   kubelet:
     extraMounts:
-    - destination: /var/lib/longhorn
+    - destination: /var/mnt/longhorn
       type: bind
-      source: /var/lib/longhorn
+      source: /var/mnt/longhorn
       options:
       - bind
       - rshared
       - rw
+---
+apiVersion: v1alpha1
+kind: VolumeConfig
+name: EPHEMERAL
+provisioning:
+  diskSelector:
+    match: disk.transport == 'nvme'
+  minSize: 2GB
+  maxSize: 80GB
+  grow: false
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: longhorn
+provisioning:
+  diskSelector:
+    match: disk.transport == 'nvme'
+  minSize: 100GB
+  grow: true

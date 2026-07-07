@@ -7,4 +7,4 @@ certSANs:
 # renovate: image=ghcr.io/siderolabs/installer
 talos_version: "1.13.5"
 # renovate: image=registry.k8s.io/kube-apiserver
-kubernetes_version: "1.33.3"
+kubernetes_version: "1.36.2"

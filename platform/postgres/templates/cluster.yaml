@@ -6,7 +6,7 @@ spec:
   instances: 3
   storage:
     storageClass: longhorn-strict-local
-    size: 1Gi
+    size: 10Gi
   resources:
     requests:
       cpu: 500m

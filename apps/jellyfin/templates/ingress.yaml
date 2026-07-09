@@ -6,7 +6,6 @@ metadata:
     {{- include "jellyfin.labels" . | nindent 4 }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-oauth2-proxy@kubernetescrd
     gethomepage.dev/enabled: "true"
     gethomepage.dev/group: Services
     gethomepage.dev/name: jellyfin

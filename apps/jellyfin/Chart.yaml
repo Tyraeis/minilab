@@ -3,7 +3,3 @@ name: jellyfin
 version: "0.0.0"
 # renovate: image=ghcr.io/jellyfin/jellyfin
 appVersion: "10.11.11"
-dependencies:
-- name: oauth2-proxy
-  version: "10.7.0"
-  repository: https://oauth2-proxy.github.io/manifests/

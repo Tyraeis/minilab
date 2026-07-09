@@ -25,6 +25,7 @@ cluster:
           - loki
           - node-feature-discovery
           - concourse
+          - crowdsec
           runtimeClasses: []
           usernames: []
         kind: PodSecurityConfiguration

@@ -1,0 +1,63 @@
+crowdsec:
+  # for raw logs format: json or cri (docker|containerd)
+  container_runtime: containerd
+  agent:
+    # Specify each pod whose logs you want to process
+    acquisition:
+      # The namespace where the pod is located
+      - namespace: traefik
+        # The pod name
+        podName: traefik-*
+        # as in crowdsec configuration, we need to specify the program name to find a matching parser
+        program: traefik
+    env:
+      - name: COLLECTIONS
+        value: "crowdsecurity/traefik"
+  lapi:
+    env:
+      # To enroll the Security Engine to the console
+      - name: ENROLL_KEY
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-keys
+            key: ENROLL_KEY
+      - name: ENROLL_INSTANCE_NAME
+        value: "minilab"
+      - name: ENROLL_TAGS
+        value: "k8s linux test"
+      - name: DB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: mariadb-secret
+            key: password
+  ## config.yaml.local is the configuration file used by the Security Engine itself
+  config:
+    config.yaml.local: |
+      api:
+        client:
+          # the log processor will remove delete itself from LAPI when stopping.
+          unregister_on_exit: true
+        server:
+          # This is needed for agent autoregistration
+          auto_registration: # Activate if not using TLS for authentication
+            enabled: true
+            token: "${REGISTRATION_TOKEN}" # /!\ Do not modify this variable (auto-generated and handled by the chart)
+            allowed_ranges: # /!\ Make sure to adapt to the pod IP ranges used by your cluster
+              - "127.0.0.1/32"
+              - "192.168.0.0/16"
+              - "10.0.0.0/8"
+              - "172.16.0.0/12"
+      # Using a database is strongly encouraged.
+      db_config:
+        type: mysql
+        user: crowdsec
+        password: ${DB_PASSWORD}
+        db_name: crowdsec
+        host: mariadb.mariadb.svc.cluster.local
+        port: 3306
+        flush:
+          bouncers_autodelete:
+            api_key: 1h
+          agents_autodelete:
+            login_password: 6h
+            cert: 6h

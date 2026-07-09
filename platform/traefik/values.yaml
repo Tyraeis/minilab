@@ -5,6 +5,9 @@ traefik:
     websecure:
       asDefault: true
       allowACMEByPass: true
+      http:
+        middlewares:
+          - traefik-crowdsec@kubernetescrd
 
   service:
     spec:
@@ -19,3 +22,14 @@ traefik:
 
   accessLog:
     enabled: true
+
+  experimental:
+    plugins:
+      crowdsec-bouncer-traefik-plugin:
+        moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+        version: "v1.6.0"
+
+  volumes:
+    - name: crowdsec-key
+      mountPath: '/crowdsec'
+      type: secret

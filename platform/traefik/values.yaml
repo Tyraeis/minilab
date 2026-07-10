@@ -1,4 +1,7 @@
 traefik:
+  deployment:
+    replicas: 2
+
   ports:
     web:
       allowACMEByPass: true

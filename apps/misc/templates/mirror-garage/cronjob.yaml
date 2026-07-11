@@ -19,7 +19,7 @@ spec:
             imagePullPolicy: Always
             env:
             - name: SOURCE
-              value: https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases
+              value: https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases?pre-release=false&limit=1
             - name: CHART_SUBPATH
               value: garage/script/helm/garage
             - name: CHART_NAME

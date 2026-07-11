@@ -2,8 +2,8 @@ cd /tmp
 
 curl "$SOURCE" -H 'accept: application/json' -o latest_release.json
 
-version=$(jq -r '.[0].tag_name' latest_release.json)
-tarball=$(jq -r '.[0].tarball_url' latest_release.json)
+version=$(jq -r '.tag_name' latest_release.json)
+tarball=$(jq -r '.tarball_url' latest_release.json)
 prev_version=$(cat /opt/version)
 
 echo "Latest version: '$version' at $tarball"

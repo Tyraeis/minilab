@@ -12,7 +12,7 @@ echo "Last mirrored version: '$prev_version'"
 if [ "$version" != "$prev_version" ]; then
   echo "Mirroring $version"
 
-  curl "$tarball" -o ${version}.tar.gz \
+  curl -L "$tarball" -o ${version}.tar.gz \
     && gzip -d ${version}.tar.gz \
     && tar xfv ${version}.tar \
     && helm package "$CHART_SUBPATH" \

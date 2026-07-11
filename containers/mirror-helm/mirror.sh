@@ -15,7 +15,7 @@ if [ "$version" != "$prev_version" ]; then
   curl -L "$tarball" -o ${version}.tar.gz \
     && gzip -d ${version}.tar.gz \
     && tar xfv ${version}.tar \
-    && helm package "$CHART_SUBPATH" \
+    && helm package $(compgen -G "$CHART_SUBPATH") \
     && curl --user $USERNAME:$PASSWORD -X POST --upload-file ./$CHART_NAME-*.tgz "$DEST" \
     && echo -n $version >/opt/version
 else

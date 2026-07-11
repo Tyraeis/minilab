@@ -4,8 +4,10 @@ metadata:
   name: mirror-garage
 spec:
   schedule: "30 15 * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
+      backoffLimit: 0
       template:
         spec:
           securityContext:

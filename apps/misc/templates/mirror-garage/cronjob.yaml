@@ -22,6 +22,8 @@ spec:
               value: https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases
             - name: CHART_SUBPATH
               value: garage/script/helm/garage
+            - name: CHART_NAME
+              value: garage
             - name: DEST
               value: https://git.ncraig.dev/api/packages/noahc/helm/api/charts
             envFrom:

@@ -94,7 +94,7 @@ spec:
               readOnly: false
         {{- if .Values.headplane.config.generateCredentials }}
         - name: generate-headscale-token
-          image: alpine/k8s:1.33.1
+          image: alpine/k8s:1.36.2
           env:
             - name: NAMESPACE
               valueFrom:

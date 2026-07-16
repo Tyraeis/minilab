@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: headscale
+  name: headplane
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
@@ -20,4 +20,11 @@ spec:
               service:
                 name: headscale
                 port:
-                  name: http
+                  name: headscale-api
+          - path: "/admin"
+            pathType: Prefix
+            backend:
+              service:
+                name: headplane
+                port:
+                  name: headplane-ui

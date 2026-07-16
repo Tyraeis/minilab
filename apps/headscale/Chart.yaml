@@ -1,5 +1,0 @@
-apiVersion: v2
-name: defguard
-version: "0.0.0"
-# renovate: image=ghcr.io/juanfont/headscale
-appVersion: "v0.29.2"

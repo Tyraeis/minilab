@@ -6,6 +6,7 @@
 **/*-secret.yaml
 **/secret.yaml
 /*/*/secrets
+!/*/*/templates/secrets/**
 # Kubeseal temporary files
 .*.yaml?*
 # Certificates

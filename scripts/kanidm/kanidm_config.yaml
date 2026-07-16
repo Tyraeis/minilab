@@ -47,6 +47,14 @@ oauth_clients:
     - https://grafana.ncraig.dev/login/generic_oauth
     scope_maps:
       grafana_users: profile email openid groups
+  headplane:
+    displayname: headplane
+    landing_url: https://vpn.ncraig.dev/admin
+    redirect_urls:
+    - https://vpn.ncraig.dev/admin/oidc/callback
+    scope_maps:
+      vpn_users: profile email openid
+    prefer_short_username: true
   headscale:
     displayname: Headscale
     landing_url: https://vpn.ncraig.dev/

@@ -1,0 +1,28 @@
+headplane:
+  config:
+    url: https://vpn.ncraig.dev/admin
+    debug: false
+    generateCredentials: true
+    oidc:
+      issuerUrl: https://sso.ncraig.dev/oauth2/openid/headplane
+      disableApiKeyLogin: true
+      tokenEndpointAuthMethod: client_secret_post
+      clientId: headplane
+headscale:
+  config:
+    url: https://vpn.ncraig.dev
+    dns:
+      magicDns: true
+      baseDomain: home.vpn.ncraig.dev
+      nameservers:
+        global:
+          - 9.9.9.9
+          - 149.112.112.112
+          - 2620:fe::fe
+          - 2620:fe::9
+        split: {}
+    oidc:
+      issuerUrl: https://sso.ncraig.dev/oauth2/openid/headscale
+      startupCheck: true
+      pkceEnabled: true
+      clientId: headscale

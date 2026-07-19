@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "renovate.labels" . | nindent 4 }}
 spec:
-  schedule: "@hourly"
+  schedule: "45 12 * * 0"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -19,19 +19,11 @@ spec:
             fsGroup: 1000
             fsGroupChangePolicy: "OnRootMismatch"
           containers:
-            - name: renovate
-              image: renovate/renovate:{{ .Chart.AppVersion }}
-              env:
-                - name: RENOVATE_BASE_DIR
-                  value: /opt/renovate
-              envFrom:
-                - configMapRef:
-                    name: renovate-env-cm
-                - secretRef:
-                    name: renovate-env-secret
+            - name: busybox
+              image: busybox
+              command: ["sh", "-c"]
+              args: ["rm -r /opt/*"]
               volumeMounts:
-                - mountPath: /tmp
-                  name: tmp
                 - mountPath: /opt
                   name: renovate-cache
               securityContext:
@@ -43,8 +35,6 @@ spec:
                 capabilities:
                   drop: [ALL]
           volumes:
-            - name: tmp
-              emptyDir: {}
             - name: renovate-cache
               persistentVolumeClaim:
                 claimName: renovate-cache

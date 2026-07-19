@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: renovate
+  name: clear-renovate-cache
   labels:
     {{- include "renovate.labels" . | nindent 4 }}
 spec:

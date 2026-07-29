@@ -22,6 +22,8 @@ class ImageFactory:
       request = Request('https://factory.talos.dev/schematics', method='POST', data=f)
       with urlopen(request) as resp:
         body = json.load(resp)
+        with open(f'rendered/{hardware_name}_image_factory_id', 'w') as f2:
+          f2.write(body['id'])
         return body['id']
 
 
@@ -101,6 +103,13 @@ class Talosctl:
     self('health', ip=ip, dry_run=dry_run)
 
 
+def kubectl(*args: str, dry_run: bool):
+  cmd = ['kubectl', *args]
+  print('$ ' + ' '.join(cmd))
+  if not dry_run:
+    subprocess.run(cmd, check=True)
+
+
 type Inventory = dict[str, Group]
 Group = TypedDict('Group', {'role': str, 'hardware': str, 'nodes': dict[str, str]})
 
@@ -166,6 +175,10 @@ def main():
         pause = value != 'y'
         if value == 's':
           continue
+
+      if args.upgrade or args.reboot:
+        # pre-drain node so that talosctl doesn't time out when it tries to drain (longhorn can take a long time to shut down safely)
+        kubectl('drain', hostname, '--ignore-daemonsets', dry_run=args.dry_run)
 
       if args.apply or args.genconfig:
         config_filename = configRenderer.gen_config(hostname, group['role'], group['hardware'],

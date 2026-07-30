@@ -14,6 +14,13 @@ spec:
     limits:
       cpu: 1000m
       memory: 1Gi
+  probes:
+    startup:
+      timeoutSeconds: 5
+    readiness:
+      timeoutSeconds: 5
+    liveness:
+      timeoutSeconds: 5
   managed:
     roles:
     - name: concourse

@@ -12,17 +12,17 @@ from urllib.request import Request, urlopen
 class ImageFactory:
   _image_cache: dict[str, str] = {}
 
-  def get_image_id(self, hardware_name: str) -> str:
-    if hardware_name not in self._image_cache:
-      self._image_cache[hardware_name] = self._fetch_image_id(hardware_name)
-    return self._image_cache[hardware_name]
+  def get_image_id(self, image_name: str) -> str:
+    if image_name not in self._image_cache:
+      self._image_cache[image_name] = self._fetch_image_id(image_name)
+    return self._image_cache[image_name]
 
-  def _fetch_image_id(self, hardware_name: str) -> str:
-    with open(f'hardware/{hardware_name}/image.yaml', 'rb') as f:
+  def _fetch_image_id(self, image_name: str) -> str:
+    with open(f'images/{image_name}.yaml', 'rb') as f:
       request = Request('https://factory.talos.dev/schematics', method='POST', data=f)
       with urlopen(request) as resp:
         body = json.load(resp)
-        with open(f'rendered/{hardware_name}_image_factory_id', 'w') as f2:
+        with open(f'rendered/{image_name}_image_factory_id', 'w') as f2:
           f2.write(body['id'])
         return body['id']
 
@@ -39,20 +39,22 @@ class ConfigRenderer:
 
   def _render_patch(self, name: str, path: str, **extra_vars: Any) -> str:
     template = self._env.get_template(path)
-    outfile = f'rendered/{name}_{path.replace("/", "_")}.yaml'
+    outfile = f'rendered/{name}_{path.replace("/", "_")}'
     with open(outfile, 'w') as f:
       f.write(template.render(**self._vars, **extra_vars))
     return outfile
 
-  def gen_config(self, name: str, role: str, hardware: str, **extra_vars: Any) -> str:
+  def gen_config(self, name: str, role: str, layers: list[str], **extra_vars: Any) -> str:
     patch_args: list[str] = [
       arg
-      for path in [
-        *glob(f'roles/common/*.yaml'),
-        *glob(f'roles/{role}/*.yaml'),
-        *glob(f'hardware/{hardware}/patch/*.yaml')
+      for layer in layers
+      for (scope, patch_type_arg) in [
+        ('', '--config-patch'),
+        ('worker', '--config-patch-worker'),
+        ('controlplane', '--config-patch-control-plane')
       ]
-      for arg in ['--config-patch', '@' + self._render_patch(name, path, **extra_vars)]
+      for path in glob(os.path.join('layers', layer, scope, '*.yaml'))
+      for arg in [patch_type_arg, '@' + self._render_patch(name, path, **extra_vars)]
     ]
 
     outfile = f'rendered/{name}.yaml'
@@ -111,7 +113,12 @@ def kubectl(*args: str, dry_run: bool):
 
 
 type Inventory = dict[str, Group]
-Group = TypedDict('Group', {'role': str, 'hardware': str, 'nodes': dict[str, str]})
+Group = TypedDict('Group', {
+  'role': str,
+  'image': str,
+  'layers': list[str],
+  'nodes': dict[str, str]
+})
 
 def read_inventory(name: str) -> Inventory:
   with open(f'inventory/{name}.yaml') as f:
@@ -126,8 +133,7 @@ def parse_args() -> Namespace:
   parser.add_argument('-b', '--reboot', action='store_true', help='manually reboot each node using talosctl reboot')
   parser.add_argument('-P', '--nopause', action='store_true', help='do not wait for input before operation on each node')
   parser.add_argument('--group', action='store', default=None, help='only operate on nodes in the specified group')
-  parser.add_argument('--role', action='store', default=None, help='only operate on nodes with the specified role')
-  parser.add_argument('--hardware', action='store', default=None, help='only operate on nodes with the specified hardware')
+  parser.add_argument('--layer', action='store', default=None, help='only operate on nodes with the specified layer')
   parser.add_argument('--node', action='store', default=None, help='only operate on a specific node')
   parser.add_argument('--talosctl', action='store', default='talosctl', help="talosctl executable to use")
   parser.add_argument('-d', '--dry-run', action='store_true')
@@ -149,8 +155,7 @@ def main():
     group_name: group
     for group_name, group in raw_inventory.items()
     if args.group == None or group_name == args.group
-    if args.role == None or group['role'] == args.role
-    if args.hardware == None or group['hardware'] == args.hardware
+    if args.layer == None or args.layer in group['layers']
   }
 
   # ip address of an arbitrary control plane node
@@ -164,7 +169,7 @@ def main():
   pause = not args.dry_run and not args.nopause
 
   for group_name, group in inventory.items():
-    image_id = imageFactory.get_image_id(group['hardware'])
+    image_id = imageFactory.get_image_id(group['image'])
     for hostname, ip in group['nodes'].items():
       if args.node != None and args.node != hostname:
         continue
@@ -181,7 +186,7 @@ def main():
         kubectl('drain', hostname, '--ignore-daemonsets', dry_run=args.dry_run)
 
       if args.apply or args.genconfig:
-        config_filename = configRenderer.gen_config(hostname, group['role'], group['hardware'],
+        config_filename = configRenderer.gen_config(hostname, group['role'], group['layers'],
                                                     hostname=hostname, ip=ip, image_factory_id=image_id)
         talosctl.validate_config(config_filename)
         if args.apply:

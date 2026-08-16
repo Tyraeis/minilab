@@ -1,15 +1,12 @@
-controlplane:
+nodes:
   role: controlplane
-  hardware: zero3e
+  image: m720q
+  layers:
+  - m720q
+  - base
+  - workload
+  - combined
   nodes:
-    cp0: 192.168.5.8
-    cp1: 192.168.5.9
-    cp2: 192.168.5.10
-
-workers:
-  role: worker
-  hardware: m720q
-  nodes:
-    worker0: 192.168.5.16
-    worker1: 192.168.5.17
-    worker2: 192.168.5.18
+    node0: 192.168.5.16
+    node1: 192.168.5.17
+    node2: 192.168.5.18

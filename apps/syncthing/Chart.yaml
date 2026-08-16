@@ -2,7 +2,7 @@ apiVersion: v2
 name: syncthing
 version: "0.0.0"
 # renovate: image=syncthing/syncthing
-appVersion: "2.1.2"
+appVersion: "2.1.3"
 dependencies:
 - name: oauth2-proxy
   version: "10.7.0"

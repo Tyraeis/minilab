@@ -16,11 +16,17 @@ spec:
       memory: 1Gi
   probes:
     startup:
+      periodSeconds: 30
       timeoutSeconds: 5
     readiness:
+      periodSeconds: 30
       timeoutSeconds: 5
     liveness:
+      periodSeconds: 30
       timeoutSeconds: 5
+      isolationCheck:
+        requestTimeout: 5000
+        connectionTimeout: 5000
   managed:
     roles:
     - name: concourse

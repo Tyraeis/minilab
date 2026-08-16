@@ -21,3 +21,18 @@ spec:
       memory: 1Gi
   updateStrategy:
     autoUpdateDataPlane: true
+  affinity:
+    antiAffinityEnabled: true
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/instance
+                operator: In
+                values:
+                  - mariadb
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - mariadb

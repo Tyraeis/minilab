@@ -15,6 +15,7 @@ groups:
 - name: nas_admins
   posix: true
 - name: vpn_users
+- name: printer_users
 
 oauth_clients:
   argocd:
@@ -98,6 +99,13 @@ oauth_clients:
     - https://syncthing.ncraig.dev/oauth2/callback
     scope_maps:
       syncthing_users: profile email openid
+  spoolman:
+    displayname: Spoolman
+    landing_url: https://spoolman.ncraig.dev/
+    redirect_urls:
+    - https://spoolman.ncraig.dev/oauth2/callback
+    scope_maps:
+      printer_users: profile email openid
   whoami:
     displayname: whoami
     landing_url: https://whoami.ncraig.dev/

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spoolman-http
+  labels:
+    {{- include "spoolman.labels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  externalTrafficPolicy: Local
+  selector:
+    {{- include "spoolman.selectorLabels" . | nindent 4 }}

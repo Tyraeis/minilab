@@ -1,0 +1,21 @@
+hostname: &hostname spoolman.ncraig.dev
+tlsSecretName: spoolman-ncraig-dev-cert
+
+oauth2-proxy:
+  config:
+    existingSecret: spoolman-oauth-secret
+    configFile: |
+      provider = "oidc"
+      email_domains = "*"
+      oidc_email_claim = "sub"
+      upstreams = "static://202"
+      reverse_proxy = true
+      oidc_issuer_url = "https://sso.ncraig.dev/oauth2/openid/spoolman"
+      code_challenge_method = "S256"
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+    - *hostname
+    path: /oauth2
+    pathType: Prefix

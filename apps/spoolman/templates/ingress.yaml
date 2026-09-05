@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: spoolman
+  labels:
+    {{- include "spoolman.labels" . | nindent 4 }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.middlewares: {{ .Release.Namespace }}-oauth2-proxy@kubernetescrd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - spoolman.ncraig.dev
+      secretName: spoolman-ncraig-dev-cert
+  rules:
+    - host: spoolman.ncraig.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: spoolman-http
+                port:
+                  number: 80

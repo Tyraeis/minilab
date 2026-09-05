@@ -1,0 +1,9 @@
+apiVersion: v2
+name: syncthing
+version: "0.0.0"
+# renovate: image=ghcr.io/donkie/spoolman
+appVersion: "0.26.1"
+dependencies:
+- name: oauth2-proxy
+  version: "10.7.0"
+  repository: https://oauth2-proxy.github.io/manifests/

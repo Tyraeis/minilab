@@ -1,6 +1,6 @@
 dependencies:
 - name: garage
   repository: https://git.ncraig.dev/api/packages/noahc/helm
-  version: 0.9.3
-digest: sha256:54b5fb84b667e3764cbbeec0da1fa60eb3529eaf4b770a2e8c9d68d567d68a66
-generated: "2026-05-13T21:21:33.349099574-04:00"
+  version: 0.10.2
+digest: sha256:1590e5157bf2a4dacb101f3ad471d5f4322e617b715047d0e976ffd1df131c3c
+generated: "2026-09-08T16:01:16.116063598Z"

@@ -20,6 +20,8 @@ kube-prometheus-stack:
       type: loki
       url: http://loki-gateway.loki.svc.cluster.local
   prometheus:
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
     ingress:
       enabled: true
       annotations:

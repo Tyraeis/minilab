@@ -42,3 +42,22 @@ grafana:
       use_refresh_token: true
       allow_assign_grafana_admin: true
       role_attribute_path: "contains(groups[*], 'grafana_admins@sso.ncraig.dev') && 'Admin' || 'Viewer'"
+
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: ''
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: false
+        options:
+          path: /var/lib/grafana/dashboards/default
+  dashboards:
+    default:
+      trivy-operator-dashboard:
+        gnetId: 16337
+        revision: 16
+        datasource: Prometheus

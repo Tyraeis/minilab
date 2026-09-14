@@ -1,4 +1,5 @@
-serviceMonitor:
-  enabled: true
-service:
-  headless: false
+trivy-operator:
+  serviceMonitor:
+    enabled: true
+  service:
+    headless: false

@@ -1,9 +1,9 @@
 dependencies:
 - name: mariadb-operator-crds
   repository: https://helm.mariadb.com/mariadb-operator
-  version: 26.6.0
+  version: 26.10.0
 - name: mariadb-operator
   repository: https://helm.mariadb.com/mariadb-operator
   version: 26.10.0
-digest: sha256:755169542357f84f38e2c9fa82d5ef43d79143f42598bc6843797b31273effe2
-generated: "2026-09-18T13:01:22.467691112Z"
+digest: sha256:0ce54a29341013cea7d8cc8bc83846f2ce3c0ec960ae57e81cd47b41cedd3d67
+generated: "2026-09-18T13:02:11.621938824Z"

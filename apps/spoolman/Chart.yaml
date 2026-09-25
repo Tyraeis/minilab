@@ -2,7 +2,7 @@ apiVersion: v2
 name: syncthing
 version: "0.0.0"
 # renovate: image=ghcr.io/donkie/spoolman
-appVersion: "0.26.1"
+appVersion: "0.27.0"
 dependencies:
 - name: oauth2-proxy
   version: "10.7.0"

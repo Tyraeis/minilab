@@ -1,6 +1,6 @@
 dependencies:
 - name: concourse
   repository: https://concourse-charts.storage.googleapis.com/
-  version: 20.3.0
-digest: sha256:0218e36dc94f11064c845b7725170add2263c468e1089c06245a056ffb302229
-generated: "2026-08-16T08:07:57.486264582Z"
+  version: 20.3.1
+digest: sha256:6adeae2e3fda457e31568d5c12757eb9540df7882db5f73f61f2fc1784008033
+generated: "2026-09-28T18:01:19.394349217Z"

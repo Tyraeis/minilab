@@ -3,3 +3,5 @@ trivy-operator:
     enabled: true
   service:
     headless: false
+  operator:
+    vulnerabilityScannerEnabled: false

@@ -22,16 +22,8 @@ crowdsec:
       data:
         enabled: false
     env:
-      # To enroll the Security Engine to the console
-      - name: ENROLL_KEY
-        valueFrom:
-          secretKeyRef:
-            name: crowdsec-keys
-            key: ENROLL_KEY
-      - name: ENROLL_INSTANCE_NAME
-        value: "minilab"
-      - name: ENROLL_TAGS
-        value: "k8s linux test"
+      - name: DISABLE_ONLINE_API
+        value: "true"
       - name: DB_PASSWORD
         valueFrom:
           secretKeyRef:

@@ -59,7 +59,7 @@ spec:
               mountPath: /etc/headscale
       initContainers:
         - name: headscale
-          image: headscale/headscale:v0.29.4
+          image: headscale/headscale:v0.29.5
           imagePullPolicy: IfNotPresent
           restartPolicy: Always
           args:

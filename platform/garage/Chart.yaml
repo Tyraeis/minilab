@@ -4,4 +4,4 @@ version: "0.0.0"
 dependencies:
 - name: garage
   repository: "https://git.ncraig.dev/api/packages/noahc/helm"
-  version: "0.9.3"
+  version: "0.10.2"

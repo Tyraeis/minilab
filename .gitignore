@@ -2,6 +2,7 @@
 /venv
 # Helm dependencies
 /*/*/charts
+/*/*/Chart.lock
 # Unsealed secrets
 **/*-secret.yaml
 **/secret.yaml

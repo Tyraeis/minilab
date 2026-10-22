@@ -22,8 +22,8 @@ spec:
             - name: renovate
               image: renovate/renovate:{{ .Chart.AppVersion }}
               env:
-                - name: RENOVATE_CACHE_DIR
-                  value: /opt/cache
+                - name: RENOVATE_BASE_DIR
+                  value: /opt/renovate
               envFrom:
                 - configMapRef:
                     name: renovate-env-cm
@@ -32,7 +32,7 @@ spec:
               volumeMounts:
                 - mountPath: /tmp
                   name: tmp
-                - mountPath: /opt/cache
+                - mountPath: /opt/renovate
                   name: renovate-cache
               securityContext:
                 readOnlyRootFilesystem: true

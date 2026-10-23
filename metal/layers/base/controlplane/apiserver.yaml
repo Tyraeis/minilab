@@ -1,0 +1,6 @@
+apiVersion: v1alpha1
+kind: KubeAPIServerConfig
+certExtraSANs:
+#{% for certSAN in certSANs %}
+- "{{ certSAN }}"
+#{% endfor %}

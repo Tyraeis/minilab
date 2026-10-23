@@ -1,0 +1,7 @@
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+installer:
+  image: factory.talos.dev/metal-installer/{{ image_factory_id }}:v{{ talos_version }}
+provisioning:
+  diskSelector:
+    match: disk.transport == 'sd'

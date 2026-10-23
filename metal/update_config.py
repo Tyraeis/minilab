@@ -183,7 +183,7 @@ def main():
 
       if args.upgrade or args.reboot:
         # pre-drain node so that talosctl doesn't time out when it tries to drain (longhorn can take a long time to shut down safely)
-        kubectl('drain', hostname, '--ignore-daemonsets', dry_run=args.dry_run)
+        kubectl('drain', hostname, '--ignore-daemonsets', '--delete-emptydir-data', dry_run=args.dry_run)
 
       if args.apply or args.genconfig:
         config_filename = configRenderer.gen_config(hostname, group['role'], group['layers'],

@@ -28,17 +28,6 @@
       "matchStrings": [
         "#\\s*renovate: image=(?<depName>.*?)\\s+[\\w_\\-]+:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
       ]
-    },
-    {
-      "customType": "regex",
-      "datasourceTemplate": "git-refs",
-      "managerFilePatterns": [
-        "/(^|/)kustomization\\.yaml$/"
-      ],
-      "matchStrings": [
-        "#\\s*renovate: gh-ref\\s+[^\\n]*?https://raw\\.githubusercontent\\.com/(?<depName>\\S+/\\S+)/(?<currentDigest>[0-9a-fA-F]+)/"
-      ],
-      "packageNameTemplate": "https://github.com/{{{depName}}}"
     }
   ],
   "packageRules": [

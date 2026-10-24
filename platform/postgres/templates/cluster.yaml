@@ -35,6 +35,8 @@ spec:
   postgresql:
     extensions:
     - name: timescaledb-oss
+    shared_preload_libraries:
+    - timescaledb
   managed:
     roles:
     - name: concourse

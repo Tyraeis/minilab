@@ -4,6 +4,11 @@ metadata:
   name: postgres
 spec:
   instances: 3
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ClusterImageCatalog
+    name: postgresql-minimal-trixie
+    major: 18
   storage:
     storageClass: longhorn-strict-local
     size: 10Gi
@@ -27,6 +32,9 @@ spec:
       isolationCheck:
         requestTimeout: 5000
         connectionTimeout: 5000
+  postgresql:
+    extensions:
+    - name: timescaledb-oss
   managed:
     roles:
     - name: concourse

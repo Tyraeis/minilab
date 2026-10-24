@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
 # renovate: gh-ref
 - https://raw.githubusercontent.com/cloudnative-pg/artifacts/61f84bd4493da4e92fce41b79093246ad266a25d/image-catalogs-extensions/catalog-minimal-trixie.yaml
+- https://github.com/imusmanmalik/cloudnative-pg-timescaledb-postgis-containers//image-catalogs/?ref=9ac1dbed1955b902b231d2e406a05682cb759c94

@@ -7,7 +7,7 @@ spec:
   imageCatalogRef:
     apiGroup: postgresql.cnpg.io
     kind: ClusterImageCatalog
-    name: postgresql-minimal-trixie
+    name: timescaledb-postgis-system-trixie
     major: 18
   storage:
     storageClass: longhorn-strict-local
@@ -32,11 +32,6 @@ spec:
       isolationCheck:
         requestTimeout: 5000
         connectionTimeout: 5000
-  postgresql:
-    extensions:
-    - name: timescaledb-oss
-    shared_preload_libraries:
-    - timescaledb
   managed:
     roles:
     - name: concourse

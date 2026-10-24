@@ -32,6 +32,9 @@ spec:
       isolationCheck:
         requestTimeout: 5000
         connectionTimeout: 5000
+  postgresql:
+    shared_preload_libraries:
+    - timescaledb
   managed:
     roles:
     - name: concourse

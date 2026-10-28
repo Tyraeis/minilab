@@ -16,7 +16,7 @@ if [ "$version" != "$prev_version" ]; then
     && gzip -d ${version}.tar.gz \
     && tar xfv ${version}.tar \
     && helm package $(compgen -G "$CHART_SUBPATH") \
-    && curl --user $USERNAME:$PASSWORD -X POST --upload-file ./$CHART_NAME-*.tgz "$DEST" \
+    && curl --fail --user $USERNAME:$PASSWORD -X POST --upload-file ./$CHART_NAME-*.tgz "$DEST" \
     && echo -n $version >/opt/version
 else
   echo "$version is already mirrored"
